@@ -1,6 +1,3 @@
-#include <vector>
-#include <string>
-#include <vector>
 #include <conio.h>
 #include <iostream>
 
@@ -8,9 +5,6 @@ using std::cin;
 using std::cout;
 using std::endl;
 using std::pair;
-using std::string;
-using std::vector;
-using std::make_pair;
 
 void pause() {
   cout << "Tekan tombol apapun untuk melanjutkan..." << endl;
