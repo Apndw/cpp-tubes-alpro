@@ -1,20 +1,29 @@
+#include <vector>
 #include <conio.h>
 #include <iostream>
 
 using std::cin;
 using std::cout;
 using std::endl;
-using std::pair;
+using std::vector;
+
+void clearScreen() {
+  #ifdef _WIN32
+    system("cls");
+  #else
+    system("clear");
+  #endif
+}
 
 void pause() {
   cout << "Tekan tombol apapun untuk melanjutkan..." << endl;
   getch();
+  clearScreen();
 }
 
-void konversiSuhu(int *input) {
-  float suhu, hasil;
-
+void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float> *result) {
   while (true) {
+    cout << "Konversi Suhu" << endl;
     cout << "--------------------------------" << endl;
     cout << "1) Celcius ke Fahrenheit" << endl;
     cout << "2) Celcius ke Kelvin" << endl;
@@ -28,62 +37,122 @@ void konversiSuhu(int *input) {
     cout << "Masukkan pilihan: ";
     cin >> *input;
 
+    clearScreen();
+
+    if (*input == 7) {
+      return;
+    }
+
+    cout << "Masukan jumlah suhu yang akan dikonversi: ";
+    cin >> *totalData;
+
+    (*totalData > 1) ? data->resize(*totalData) : data->resize(1);
+
     switch (*input) {
       case 1:
-        cout << "Masukan suhu dalam celcius: ";
-        cin >> suhu;
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan suhu ke-" << i + 1 << " dalam celcius: ";
+          cin >> (*data)[i];
 
-        hasil = (suhu * 9 / 5) + 32;
-        cout << "Hasil konversi: " << hasil << " F" << endl;
+          result->push_back(((*data)[i] * 9 / 5) + 32);
+        }
+
+        clearScreen();
+
+        cout << "Hasil konversi: " << endl;
+        for (int i = 0; i < *totalData; i++) {
+          cout << (*data)[i] << " C = " << (*result)[i] << " F" << endl;
+        }
 
         pause();
         break;
       case 2:
-        cout << "Masukan suhu dalam celcius: ";
-        cin >> suhu;
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan suhu ke-" << i + 1 << " dalam celcius: ";
+          cin >> (*data)[i];
 
-        hasil = suhu + 273.15;
-        cout << "Hasil konversi: " << hasil << " K" << endl;
-        
+          result->push_back((*data)[i] + 273.15);
+        }
+
+        clearScreen();
+
+        cout << "Hasil konversi: " << endl;
+        for (int i = 0; i < *totalData; i++) {
+          cout << (*data)[i] << " C = " << (*result)[i] << " K" << endl;
+        }
+
         pause();
         break;
       case 3:
-        cout << "Masukan suhu dalam fahrenheit: ";
-        cin >> suhu;
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan suhu ke-" << i + 1 << " dalam fahrenheit: ";
+          cin >> (*data)[i];
 
-        hasil = (suhu - 32) * 5 / 9;
-        cout << "Hasil konversi: " << hasil << " C" << endl;
-        
+          result->push_back(((*data)[i] - 32) * 5 / 9);
+        }
+
+        clearScreen();
+
+        cout << "Hasil konversi: " << endl;
+        for (int i = 0; i < *totalData; i++) {
+          cout << (*data)[i] << " F = " << (*result)[i] << " C" << endl;
+        }
+
         pause();
         break;
       case 4:
-        cout << "Masukan suhu dalam fahrenheit: ";
-        cin >> suhu;
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan suhu ke-" << i + 1 << " dalam fahrenheit: ";
+          cin >> (*data)[i];
 
-        hasil = (suhu - 32) * 5 / 9 + 273.15;
-        cout << "Hasil konversi: " << hasil << " K" << endl;
-        
+          result->push_back(((*data)[i] - 32) * 5 / 9 + 273.15);
+        }
+
+        clearScreen();
+
+        cout << "Hasil konversi: " << endl;
+        for (int i = 0; i < *totalData; i++) {
+          cout << (*data)[i] << " F = " << (*result)[i] << " K" << endl;
+        }
+
         pause();
         break;
       case 5:
-        cout << "Masukan suhu dalam kelvin: ";
-        cin >> suhu;
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan suhu ke-" << i + 1 << " dalam kelvin: ";
+          cin >> (*data)[i];
 
-        hasil = suhu - 273.15;
-        cout << "Hasil konversi: " << hasil << " C" << endl;
-        
+          result->push_back((*data)[i] - 273.15);
+        }
+
+        clearScreen();
+
+        cout << "Hasil konversi: " << endl;
+        for (int i = 0; i < *totalData; i++) {
+          cout << (*data)[i] << " K = " << (*result)[i] << " C" << endl;
+        }
+
         pause();
         break;
       case 6:
-        cout << "Masukan suhu dalam kelvin: ";
-        cin >> suhu;
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan suhu ke-" << i + 1 << " dalam kelvin: ";
+          cin >> (*data)[i];
 
-        hasil = (suhu - 273.15) * 9 / 5 + 32;
-        cout << "Hasil konversi: " << hasil << " F" << endl;
+          result->push_back(((*data)[i] - 273.15) * 9 / 5 + 32);
+        }
+
+        clearScreen();
+
+        cout << "Hasil konversi: " << endl;
+        for (int i = 0; i < *totalData; i++) {
+          cout << (*data)[i] << " K = " << (*result)[i] << " F" << endl;
+        }
 
         pause();
         break;
       case 7:
+        clearScreen();
         return;
       default:
         cout << "Pilihan tidak tersedia" << endl;
@@ -91,9 +160,7 @@ void konversiSuhu(int *input) {
   }
 }
 
-void konversiPanjang(int *input) {
-  float panjang, hasil;
-
+void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<float> *result) {
   while (true) {
     cout << "--------------------------------" << endl;
     cout << "1) Kilometer ke Meter" << endl;
@@ -108,72 +175,127 @@ void konversiPanjang(int *input) {
     cout << "Masukkan pilihan: ";
     cin >> *input;
 
+    clearScreen();
+
+    if (*input == 7) {
+      return;
+    }
+    
+    cout << "Masukan jumlah panjang yang akan dikonversi: ";
+    cin >> *totalData;
+
+    (*totalData > 1) ? data->resize(*totalData) : data->resize(1);
+
     switch (*input) {
       case 1:
-        cout << "Masukan panjang dalam kilometer: ";
-        cin >> panjang;
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan panjang ke-" << i + 1 << " dalam kilometer: ";
+          cin >> (*data)[i];
 
-        hasil = panjang * 1000;
-        cout << "Hasil konversi: " << hasil << " m" << endl;
-        
+          result->push_back((*data)[i] * 1000);
+        }
+
+        clearScreen();
+
+        cout << "Hasil konversi: " << endl;
+        for (int i = 0; i < *totalData; i++) {
+          cout << (*data)[i] << " km = " << (*result)[i] << " m" << endl;
+        }
+
         pause();
         break;
       case 2:
-        cout << "Masukan panjang dalam kilometer: ";
-        cin >> panjang;
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan panjang ke-" << i + 1 << " dalam kilometer: ";
+          cin >> (*data)[i];
 
-        hasil = panjang * 100000;
-        cout << "Hasil konversi: " << hasil << " cm" << endl;
-        
+          result->push_back((*data)[i] * 100000);
+        }
+
+        clearScreen();
+
+        cout << "Hasil konversi: " << endl;
+        for (int i = 0; i < *totalData; i++) {
+          cout << (*data)[i] << " km = " << (*result)[i] << " cm" << endl;
+        }
+
         pause();
         break;
       case 3:
-        cout << "Masukan panjang dalam meter: ";
-        cin >> panjang;
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan panjang ke-" << i + 1 << " dalam meter: ";
+          cin >> (*data)[i];
 
-        hasil = panjang / 1000;
-        cout << "Hasil konversi: " << hasil << " km" << endl;
-        
+          result->push_back((*data)[i] / 1000);
+        }
+
+        clearScreen();
+
+        cout << "Hasil konversi: " << endl;
+        for (int i = 0; i < *totalData; i++) {
+          cout << (*data)[i] << " m = " << (*result)[i] << " km" << endl;
+        }
+
         pause();
         break;
       case 4:
-        cout << "Masukan panjang dalam meter: ";
-        cin >> panjang;
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan panjang ke-" << i + 1 << " dalam meter: ";
+          cin >> (*data)[i];
 
-        hasil = panjang * 100;
-        cout << "Hasil konversi: " << hasil << " cm" << endl;
-        
+          result->push_back((*data)[i] * 100);
+        }
+
+        clearScreen();
+
+        cout << "Hasil konversi: " << endl;
+        for (int i = 0; i < *totalData; i++) {
+          cout << (*data)[i] << " m = " << (*result)[i] << " cm" << endl;
+        }
+
         pause();
         break;
       case 5:
-        cout << "Masukan panjang dalam centimeter: ";
-        cin >> panjang;
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan panjang ke-" << i + 1 << " dalam centimeter: ";
+          cin >> (*data)[i];
 
-        hasil = panjang / 100000;
-        cout << "Hasil konversi: " << hasil << " km" << endl;
-        
+          result->push_back((*data)[i] / 100000);
+        }
+
+        clearScreen();
+
+        cout << "Hasil konversi: " << endl;
+        for (int i = 0; i < *totalData; i++) {
+          cout << (*data)[i] << " cm = " << (*result)[i] << " km" << endl;
+        }
+
         pause();
         break;
       case 6:
-        cout << "Masukan panjang dalam centimeter: ";
-        cin >> panjang;
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan panjang ke-" << i + 1 << " dalam centimeter: ";
+          cin >> (*data)[i];
 
-        hasil = panjang / 100;
-        cout << "Hasil konversi: " << hasil << " m" << endl;
-        
+          result->push_back((*data)[i] / 100);
+        }
+
+        clearScreen();
+
+        cout << "Hasil konversi: " << endl;
+        for (int i = 0; i < *totalData; i++) {
+          cout << (*data)[i] << " cm = " << (*result)[i] << " m" << endl;
+        }
+
         pause();
         break;
-      case 7:
-        return;
       default:
         cout << "Pilihan tidak tersedia" << endl;
     }
   }
 }
 
-void konversiBerat(int *input) {
-  float berat, hasil;
-
+void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float> *result) {
   while (true) {
     cout << "--------------------------------" << endl;
     cout << "1) Gram ke Kilogram" << endl;
@@ -188,63 +310,120 @@ void konversiBerat(int *input) {
     cout << "Masukkan pilihan: ";
     cin >> *input;
 
+    clearScreen();
+
+    if (*input == 7) {
+      return;
+    }
+
+    cout << "Masukan jumlah suhu yang akan dikonversi: ";
+    cin >> *totalData;
+
+    (*totalData > 1) ? data->resize(*totalData) : data->resize(1);
+
     switch (*input) {
       case 1:
-        cout << "Masukan berat dalam gram: ";
-        cin >> berat;
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan berat ke-" << i + 1 << " dalam gram: ";
+          cin >> (*data)[i];
 
-        hasil = berat / 1000;
-        cout << "Hasil konversi: " << hasil << " kg" << endl;
-        
+          result->push_back((*data)[i] / 1000);
+        }
+
+        clearScreen();
+
+        cout << "Hasil konversi: " << endl;
+        for (int i = 0; i < *totalData; i++) { 
+          cout << (*data)[i] << " g = " << (*result)[i] << " kg" << endl;
+        }
+
         pause();
         break;
       case 2:
-        cout << "Masukan berat dalam gram: ";
-        cin >> berat;
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan berat ke-" << i + 1 << " dalam gram: ";
+          cin >> (*data)[i];
 
-        hasil = berat / 100;
-        cout << "Hasil konversi: " << hasil << " ons" << endl;
-        
+          result->push_back((*data)[i] / 10);
+        }
+
+        clearScreen();
+
+        cout << "Hasil konversi: " << endl;
+        for (int i = 0; i < *totalData; i++) { 
+          cout << (*data)[i] << " g = " << (*result)[i] << " ons" << endl;
+        }
+
         pause();
         break;
       case 3:
-        cout << "Masukan berat dalam kilogram: ";
-        cin >> berat;
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan berat ke-" << i + 1 << " dalam kilogram: ";
+          cin >> (*data)[i];
 
-        hasil = berat * 1000;
-        cout << "Hasil konversi: " << hasil << " g" << endl;
-        
+          result->push_back((*data)[i] * 1000);
+        }
+
+        clearScreen();
+
+        cout << "Hasil konversi: " << endl;
+        for (int i = 0; i < *totalData; i++) { 
+          cout << (*data)[i] << " kg = " << (*result)[i] << " g" << endl;
+        }
+
         pause();
         break;
       case 4:
-        cout << "Masukan berat dalam kilogram: ";
-        cin >> berat;
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan berat ke-" << i + 1 << " dalam kilogram: ";
+          cin >> (*data)[i];
 
-        hasil = berat * 10;
-        cout << "Hasil konversi: " << hasil << " ons" << endl;
-        
+          result->push_back((*data)[i] * 10);
+        }
+
+        clearScreen();
+
+        cout << "Hasil konversi: " << endl;
+        for (int i = 0; i < *totalData; i++) { 
+          cout << (*data)[i] << " kg = " << (*result)[i] << " ons" << endl;
+        }
+
         pause();
         break;
       case 5:
-        cout << "Masukan berat dalam ons: ";
-        cin >> berat;
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan berat ke-" << i + 1 << " dalam ons: ";
+          cin >> (*data)[i];
 
-        hasil = berat * 100;
-        cout << "Hasil konversi: " << hasil << " g" << endl;
-        
+          result->push_back((*data)[i] * 100);
+        }
+
+        clearScreen();
+
+        cout << "Hasil konversi: " << endl;
+        for (int i = 0; i < *totalData; i++) { 
+          cout << (*data)[i] << " ons = " << (*result)[i] << " g" << endl;
+        }
+
         pause();
         break;
       case 6:
-        cout << "Masukan berat dalam ons: ";
-        cin >> berat;
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan berat ke-" << i + 1 << " dalam ons: ";
+          cin >> (*data)[i];
 
-        hasil = berat / 10;
-        cout << "Hasil konversi: " << hasil << " kg" << endl;
-        
+          result->push_back((*data)[i] / 10);
+        }
+
+        clearScreen();
+
+        cout << "Hasil konversi: " << endl;
+        for (int i = 0; i < *totalData; i++) { 
+          cout << (*data)[i] << " ons = " << (*result)[i] << " kg" << endl;
+        }
+
         pause();
         break;
-      case 7:
-        return;
       default:
         cout << "Pilihan tidak tersedia" << endl;
     }
@@ -252,10 +431,11 @@ void konversiBerat(int *input) {
 }
 
 int main() {
-  int input;
+  int input, totalData;
   bool isOnRepeat = true;
+  vector<float> data, result;
 
-  while (isOnRepeat) {
+  do {
     cout << "Selamat datang di posion (pocket conversion)" << endl;
     cout << "1) Konversi Suhu" << endl;
     cout << "2) Konversi Panjang" << endl;
@@ -263,18 +443,22 @@ int main() {
     cout << "4) Keluar" << endl;
     cout << "--------------------------------" << endl;
 
+    cout << totalData << endl;
+
     cout << "Masukkan pilihan: ";
     cin >> input;
 
+    clearScreen();
+
     switch (input) {
       case 1:
-        konversiSuhu(&input);
+        konversiSuhu(&input, &totalData, &data, &result);
         break;
       case 2:
-        konversiPanjang(&input);
+        konversiPanjang(&input, &totalData, &data, &result);
         break;
       case 3:
-        konversiBerat(&input);
+        konversiBerat(&input, &totalData, &data, &result);
         break;
       case 4:
         isOnRepeat = false;
@@ -282,7 +466,7 @@ int main() {
       default:
         cout << "Pilihan tidak tersedia" << endl;
     }
-  }
+  } while (isOnRepeat);
 
   cout << "Terima kasih telah menggunakan posion (pocket conversion)" << endl;
 
