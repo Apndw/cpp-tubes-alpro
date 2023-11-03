@@ -7,6 +7,11 @@ using std::cout;
 using std::endl;
 using std::vector;
 
+/**
+ * @brief Clear screen terminal support windows and linux based
+ * 
+ * @return void
+*/
 void clearScreen() {
   #ifdef _WIN32
     system("cls");
@@ -15,12 +20,27 @@ void clearScreen() {
   #endif
 }
 
+/**
+ * @brief Pause program until user press any key
+ * 
+ * @return void
+*/
 void pause() {
   cout << "Tekan tombol apapun untuk melanjutkan..." << endl;
   getch();
   clearScreen();
 }
 
+/**
+ * @brief Konversi suhu
+ * 
+ * @param input pointer untuk menyimpan inputan user - integer
+ * @param totalData pointer untuk menyimpan jumlah data yang akan dikonversi - integer
+ * @param data pointer untuk menyimpan data yang akan dikonversi - vector<float>
+ * @param result pointer untuk menyimpan hasil konversi - vector<float>
+ * 
+ * @return void
+*/
 void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float> *result) {
   while (true) {
     cout << "Konversi Suhu" << endl;
@@ -43,7 +63,7 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
       return;
     }
 
-    cout << "Masukan jumlah suhu yang akan dikonversi: ";
+    cout << "Masukan jumlah data suhu yang akan dikonversi: ";
     cin >> *totalData;
 
     (*totalData > 1) ? data->resize(*totalData) : data->resize(1);
@@ -160,6 +180,16 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
   }
 }
 
+/**
+ * @brief Konversi panjang
+ * 
+ * @param input pointer untuk menyimpan inputan user - integer
+ * @param totalData pointer untuk menyimpan jumlah data yang akan dikonversi - integer
+ * @param data pointer untuk menyimpan data yang akan dikonversi - vector<float>
+ * @param result pointer untuk menyimpan hasil konversi - vector<float>
+ * 
+ * @return void
+*/
 void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<float> *result) {
   while (true) {
     cout << "--------------------------------" << endl;
@@ -181,7 +211,7 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
       return;
     }
     
-    cout << "Masukan jumlah panjang yang akan dikonversi: ";
+    cout << "Masukan jumlah data panjang yang akan dikonversi: ";
     cin >> *totalData;
 
     (*totalData > 1) ? data->resize(*totalData) : data->resize(1);
@@ -295,6 +325,16 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
   }
 }
 
+/**
+ * @brief Konversi berat
+ * 
+ * @param input pointer untuk menyimpan inputan user - integer
+ * @param totalData pointer untuk menyimpan jumlah data yang akan dikonversi - integer
+ * @param data pointer untuk menyimpan data yang akan dikonversi - vector<float>
+ * @param result pointer untuk menyimpan hasil konversi - vector<float>
+ * 
+ * @return void
+*/
 void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float> *result) {
   while (true) {
     cout << "--------------------------------" << endl;
@@ -316,7 +356,7 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
       return;
     }
 
-    cout << "Masukan jumlah suhu yang akan dikonversi: ";
+    cout << "Masukan jumlah data berat yang akan dikonversi: ";
     cin >> *totalData;
 
     (*totalData > 1) ? data->resize(*totalData) : data->resize(1);
@@ -430,6 +470,11 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
   }
 }
 
+/**
+ * @brief Main program
+ * 
+ * @return int
+*/
 int main() {
   int input, totalData;
   bool isOnRepeat = true;
@@ -442,8 +487,6 @@ int main() {
     cout << "3) Konversi Berat" << endl;
     cout << "4) Keluar" << endl;
     cout << "--------------------------------" << endl;
-
-    cout << totalData << endl;
 
     cout << "Masukkan pilihan: ";
     cin >> input;
