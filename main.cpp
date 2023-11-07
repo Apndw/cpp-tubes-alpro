@@ -2,6 +2,13 @@
 #include <conio.h>
 #include <iostream>
 
+/**
+ * Import beberapa fungsi dari namespace std
+ * std::cin = untuk mengambil inputan user
+ * std::cout = untuk menampilkan output
+ * std::endl = untuk membuat baris baru
+ * std::vector = untuk membuat vector (array dinamis)
+*/
 using std::cin;
 using std::cout;
 using std::endl;
@@ -238,7 +245,7 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
           cout << (*data)[i] << " C = " << (*result)[i] << " F" << endl;
         }
 
-        pauseScreen();
+        pauseScreen(); // Pause program hingga user menekan tombol apapun
         break;
       case 2:
         // Looping sebanyak totalData untuk mengambil inputan user
@@ -258,7 +265,7 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
           cout << (*data)[i] << " C = " << (*result)[i] << " K" << endl;
         }
 
-        pauseScreen();
+        pauseScreen(); // Pause program hingga user menekan tombol apapun
         break;
       case 3:
         // Looping sebanyak totalData untuk mengambil inputan user
@@ -278,7 +285,7 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
           cout << (*data)[i] << " F = " << (*result)[i] << " C" << endl;
         }
 
-        pauseScreen();
+        pauseScreen(); // Pause program hingga user menekan tombol apapun
         break;
       case 4:
         // Looping sebanyak totalData untuk mengambil inputan user
@@ -298,7 +305,7 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
           cout << (*data)[i] << " F = " << (*result)[i] << " K" << endl;
         }
 
-        pauseScreen();
+        pauseScreen(); // Pause program hingga user menekan tombol apapun
         break;
       case 5:
         // Looping sebanyak totalData untuk mengambil inputan user
@@ -318,7 +325,7 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
           cout << (*data)[i] << " K = " << (*result)[i] << " C" << endl;
         }
 
-        pauseScreen();
+        pauseScreen(); // Pause program hingga user menekan tombol apapun
         break;
       case 6:
         // Looping sebanyak totalData untuk mengambil inputan user
@@ -338,7 +345,7 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
           cout << (*data)[i] << " K = " << (*result)[i] << " F" << endl;
         }
 
-        pauseScreen();
+        pauseScreen(); // Pause program hingga user menekan tombol apapun
         break;
       default:
         // Ketika user memilih pilihan yang tidak tersedia
@@ -358,8 +365,12 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
  * @return void
  */
 void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<float> *result) {
-  while (true)
-  {
+  /**
+   * Looping akan berjalan selama true (selama program berjalan)
+   * Ketika user memilih kembali, maka program akan berhenti dan kembali ke menu utama
+   * Untuk kembali ke menu utama cukup dengan break untuk menghentikan looping
+   */
+  while (true) {
     cout << "--------------------------------" << endl;
     cout << "1) Kilometer ke Meter" << endl;
     cout << "2) Kilometer ke Centimeter" << endl;
@@ -371,138 +382,149 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
     cout << "--------------------------------" << endl;
 
     cout << "Masukkan pilihan: ";
-    cin >> *input;
+    cin >> *input; // Menyimpan inputan user ke variable input dengan pointer
 
-    clearScreen();
+    clearScreen(); // Membersihkan layar terminal
 
-    if (*input == 7)
-    {
-      return;
-    }
+    // Ketika user memilih kembali, maka program akan berhenti dan kembali ke menu utama
+    if (*input == 7) break;
 
     cout << "Masukan jumlah data panjang yang akan dikonversi: ";
-    cin >> *totalData;
+    cin >> *totalData; // Menyimpan inputan user ke variable totalData dengan pointer
 
+    // resize adalah fungsi untuk mengubah ukuran vector atau panjang array
     (*totalData > 1) ? data->resize(*totalData) : data->resize(1);
 
-    switch (*input)
-    {
-    case 1:
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << "Masukan panjang ke-" << i + 1 << " dalam kilometer: ";
-        cin >> (*data)[i];
+    /**
+     * Percabangan untuk menentukan pilihan user
+     * Ketika user memilih pilihan yang tersedia, maka program akan menjalankan konversi panjang
+     * Ketika user memilih pilihan yang tidak tersedia, maka program akan menampilkan pesan "Pilihan tidak tersedia"
+     * Range pilihan hanya 1 - 6 karena pilihan 7 adalah untuk kembali ke menu utama (break)
+     */
+    switch (*input) {
+      case 1:
+        // Looping sebanyak totalData untuk mengambil inputan user
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan panjang ke-" << i + 1 << " dalam kilometer: ";
+          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
 
-        result->push_back((*data)[i] * 1000);
-      }
+          // tidak menggunakan tanda * karena data adalah pointer
+          result->push_back((*data)[i] * 1000);
+        }
 
-      clearScreen();
+        clearScreen(); // Membersihkan layar terminal
+        cout << "Hasil konversi: " << endl;
 
-      cout << "Hasil konversi: " << endl;
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << (*data)[i] << " km = " << (*result)[i] << " m" << endl;
-      }
+        // Looping sebanyak totalData untuk menampilkan hasil konversi
+        for (int i = 0; i < *totalData; i++){
+          cout << (*data)[i] << " km = " << (*result)[i] << " m" << endl;
+        }
 
-      pauseScreen();
-      break;
-    case 2:
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << "Masukan panjang ke-" << i + 1 << " dalam kilometer: ";
-        cin >> (*data)[i];
+        pauseScreen(); // Pause program hingga user menekan tombol apapun
+        break;
+      case 2:
+        // Looping sebanyak totalData untuk mengambil inputan user
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan panjang ke-" << i + 1 << " dalam kilometer: ";
+          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
 
-        result->push_back((*data)[i] * 100000);
-      }
+          // tidak menggunakan tanda * karena data adalah pointer
+          result->push_back((*data)[i] * 100000);
+        }
 
-      clearScreen();
+        clearScreen(); // Membersihkan layar terminal
+        cout << "Hasil konversi: " << endl;
 
-      cout << "Hasil konversi: " << endl;
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << (*data)[i] << " km = " << (*result)[i] << " cm" << endl;
-      }
+        // Looping sebanyak totalData untuk menampilkan hasil konversi
+        for (int i = 0; i < *totalData; i++) {
+          cout << (*data)[i] << " km = " << (*result)[i] << " cm" << endl;
+        }
 
-      pauseScreen();
-      break;
-    case 3:
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << "Masukan panjang ke-" << i + 1 << " dalam meter: ";
-        cin >> (*data)[i];
+        pauseScreen(); // Pause program hingga user menekan tombol apapun
+        break;
+      case 3:
+        // Looping sebanyak totalData untuk mengambil inputan user
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan panjang ke-" << i + 1 << " dalam meter: ";
+          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
 
-        result->push_back((*data)[i] / 1000);
-      }
+          // tidak menggunakan tanda * karena data adalah pointer
+          result->push_back((*data)[i] / 1000);
+        }
 
-      clearScreen();
+        clearScreen(); // Membersihkan layar terminal
+        cout << "Hasil konversi: " << endl;
 
-      cout << "Hasil konversi: " << endl;
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << (*data)[i] << " m = " << (*result)[i] << " km" << endl;
-      }
+        // Looping sebanyak totalData untuk menampilkan hasil konversi
+        for (int i = 0; i < *totalData; i++) {
+          cout << (*data)[i] << " m = " << (*result)[i] << " km" << endl;
+        }
 
-      pauseScreen();
-      break;
-    case 4:
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << "Masukan panjang ke-" << i + 1 << " dalam meter: ";
-        cin >> (*data)[i];
+        pauseScreen(); // Pause program hingga user menekan tombol apapun
+        break;
+      case 4:
+        // Looping sebanyak totalData untuk mengambil inputan user
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan panjang ke-" << i + 1 << " dalam meter: ";
+          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
 
-        result->push_back((*data)[i] * 100);
-      }
+          // tidak menggunakan tanda * karena data adalah pointer
+          result->push_back((*data)[i] * 100);
+        }
 
-      clearScreen();
+        clearScreen(); // Membersihkan layar terminal
+        cout << "Hasil konversi: " << endl;
 
-      cout << "Hasil konversi: " << endl;
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << (*data)[i] << " m = " << (*result)[i] << " cm" << endl;
-      }
+        // Looping sebanyak totalData untuk menampilkan hasil konversi
+        for (int i = 0; i < *totalData; i++) {
+          cout << (*data)[i] << " m = " << (*result)[i] << " cm" << endl;
+        }
 
-      pauseScreen();
-      break;
-    case 5:
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << "Masukan panjang ke-" << i + 1 << " dalam centimeter: ";
-        cin >> (*data)[i];
+        pauseScreen(); // Pause program hingga user menekan tombol apapun
+        break;
+      case 5:
+        // Looping sebanyak totalData untuk mengambil inputan user
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan panjang ke-" << i + 1 << " dalam centimeter: ";
+          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
 
-        result->push_back((*data)[i] / 100000);
-      }
+          // tidak menggunakan tanda * karena data adalah pointer
+          result->push_back((*data)[i] / 100000);
+        }
 
-      clearScreen();
+        clearScreen(); // Membersihkan layar terminal
+        cout << "Hasil konversi: " << endl;
 
-      cout << "Hasil konversi: " << endl;
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << (*data)[i] << " cm = " << (*result)[i] << " km" << endl;
-      }
+        // Looping sebanyak totalData untuk menampilkan hasil konversi
+        for (int i = 0; i < *totalData; i++) {
+          cout << (*data)[i] << " cm = " << (*result)[i] << " km" << endl;
+        }
 
-      pauseScreen();
-      break;
-    case 6:
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << "Masukan panjang ke-" << i + 1 << " dalam centimeter: ";
-        cin >> (*data)[i];
+        pauseScreen(); // Pause program hingga user menekan tombol apapun
+        break;
+      case 6:
+        // Looping sebanyak totalData untuk mengambil inputan user
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan panjang ke-" << i + 1 << " dalam centimeter: ";
+          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
 
-        result->push_back((*data)[i] / 100);
-      }
+          // tidak menggunakan tanda * karena data adalah pointer
+          result->push_back((*data)[i] / 100);
+        }
 
-      clearScreen();
+        clearScreen(); // Membersihkan layar terminal
+        cout << "Hasil konversi: " << endl;
 
-      cout << "Hasil konversi: " << endl;
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << (*data)[i] << " cm = " << (*result)[i] << " m" << endl;
-      }
+        // Looping sebanyak totalData untuk menampilkan hasil konversi
+        for (int i = 0; i < *totalData; i++) {
+          cout << (*data)[i] << " cm = " << (*result)[i] << " m" << endl;
+        }
 
-      pauseScreen();
-      break;
-    default:
-      cout << "Pilihan tidak tersedia" << endl;
+        pauseScreen(); // Pause program hingga user menekan tombol apapun
+        break;
+      default:
+        // Ketika user memilih pilihan yang tidak tersedia
+        cout << "Pilihan tidak tersedia" << endl;
     }
   }
 }
@@ -517,10 +539,13 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
  *
  * @return void
  */
-void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float> *result)
-{
-  while (true)
-  {
+void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float> *result) {
+  /**
+   * Looping akan berjalan selama true (selama program berjalan)
+   * Ketika user memilih kembali, maka program akan berhenti dan kembali ke menu utama
+   * Untuk kembali ke menu utama cukup dengan break untuk menghentikan looping
+   */
+  while (true) {
     cout << "--------------------------------" << endl;
     cout << "1) Gram ke Kilogram" << endl;
     cout << "2) Gram ke Ons" << endl;
@@ -532,138 +557,149 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
     cout << "--------------------------------" << endl;
 
     cout << "Masukkan pilihan: ";
-    cin >> *input;
+    cin >> *input; // Menyimpan inputan user ke variable input dengan pointer
 
-    clearScreen();
+    clearScreen(); // Membersihkan layar terminal
 
-    if (*input == 7)
-    {
-      return;
-    }
+    // Ketika user memilih kembali, maka program akan berhenti dan kembali ke menu utama
+    if (*input == 7) break;
 
     cout << "Masukan jumlah data berat yang akan dikonversi: ";
-    cin >> *totalData;
+    cin >> *totalData; // Menyimpan inputan user ke variable totalData dengan pointer
 
+    // resize adalah fungsi untuk mengubah ukuran vector atau panjang array
     (*totalData > 1) ? data->resize(*totalData) : data->resize(1);
 
-    switch (*input)
-    {
-    case 1:
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << "Masukan berat ke-" << i + 1 << " dalam gram: ";
-        cin >> (*data)[i];
+    /**
+     * Percabangan untuk menentukan pilihan user
+     * Ketika user memilih pilihan yang tersedia, maka program akan menjalankan konversi suhu
+     * Ketika user memilih pilihan yang tidak tersedia, maka program akan menampilkan pesan "Pilihan tidak tersedia"
+     * Range pilihan hanya 1 - 6 karena pilihan 7 adalah untuk kembali ke menu utama (break)
+     */
+    switch (*input) {
+      case 1:
+        // Looping sebanyak totalData untuk mengambil inputan user
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan berat ke-" << i + 1 << " dalam gram: ";
+          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
 
-        result->push_back((*data)[i] / 1000);
-      }
+          // tidak menggunakan tanda * karena data adalah pointer
+          result->push_back((*data)[i] / 1000);
+        }
 
-      clearScreen();
+        clearScreen(); // Membersihkan layar terminal
+        cout << "Hasil konversi: " << endl;
 
-      cout << "Hasil konversi: " << endl;
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << (*data)[i] << " g = " << (*result)[i] << " kg" << endl;
-      }
+        // Looping sebanyak totalData untuk menampilkan hasil konversi
+        for (int i = 0; i < *totalData; i++) {
+          cout << (*data)[i] << " g = " << (*result)[i] << " kg" << endl;
+        }
 
-      pauseScreen();
-      break;
-    case 2:
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << "Masukan berat ke-" << i + 1 << " dalam gram: ";
-        cin >> (*data)[i];
+        pauseScreen(); // Pause program hingga user menekan tombol apapun
+        break;
+      case 2:
+        // Looping sebanyak totalData untuk mengambil inputan user
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan berat ke-" << i + 1 << " dalam gram: ";
+          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
 
-        result->push_back((*data)[i] / 10);
-      }
+          // tidak menggunakan tanda * karena data adalah pointer
+          result->push_back((*data)[i] / 10);
+        }
 
-      clearScreen();
+        clearScreen(); // Membersihkan layar terminal
+        cout << "Hasil konversi: " << endl;
 
-      cout << "Hasil konversi: " << endl;
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << (*data)[i] << " g = " << (*result)[i] << " ons" << endl;
-      }
+        // Looping sebanyak totalData untuk menampilkan hasil konversi
+        for (int i = 0; i < *totalData; i++) {
+          cout << (*data)[i] << " g = " << (*result)[i] << " ons" << endl;
+        }
 
-      pauseScreen();
-      break;
-    case 3:
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << "Masukan berat ke-" << i + 1 << " dalam kilogram: ";
-        cin >> (*data)[i];
+        pauseScreen(); // Pause program hingga user menekan tombol apapun
+        break;
+      case 3:
+        // Looping sebanyak totalData untuk mengambil inputan user
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan berat ke-" << i + 1 << " dalam kilogram: ";
+          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
 
-        result->push_back((*data)[i] * 1000);
-      }
+          // tidak menggunakan tanda * karena data adalah pointer
+          result->push_back((*data)[i] * 1000);
+        }
 
-      clearScreen();
+        clearScreen(); // Membersihkan layar terminal
+        cout << "Hasil konversi: " << endl;
 
-      cout << "Hasil konversi: " << endl;
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << (*data)[i] << " kg = " << (*result)[i] << " g" << endl;
-      }
+        // Looping sebanyak totalData untuk menampilkan hasil konversi
+        for (int i = 0; i < *totalData; i++) {
+          cout << (*data)[i] << " kg = " << (*result)[i] << " g" << endl;
+        }
 
-      pauseScreen();
-      break;
-    case 4:
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << "Masukan berat ke-" << i + 1 << " dalam kilogram: ";
-        cin >> (*data)[i];
+        pauseScreen(); // Pause program hingga user menekan tombol apapun
+        break;
+      case 4:
+        // Looping sebanyak totalData untuk mengambil inputan user
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan berat ke-" << i + 1 << " dalam kilogram: ";
+          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
 
-        result->push_back((*data)[i] * 10);
-      }
+          // tidak menggunakan tanda * karena data adalah pointer
+          result->push_back((*data)[i] * 10);
+        }
 
-      clearScreen();
+        clearScreen(); // Membersihkan layar terminal
+        cout << "Hasil konversi: " << endl;
 
-      cout << "Hasil konversi: " << endl;
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << (*data)[i] << " kg = " << (*result)[i] << " ons" << endl;
-      }
+        // Looping sebanyak totalData untuk menampilkan hasil konversi
+        for (int i = 0; i < *totalData; i++) {
+          cout << (*data)[i] << " kg = " << (*result)[i] << " ons" << endl;
+        }
 
-      pauseScreen();
-      break;
-    case 5:
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << "Masukan berat ke-" << i + 1 << " dalam ons: ";
-        cin >> (*data)[i];
+        pauseScreen(); // Pause program hingga user menekan tombol apapun
+        break;
+      case 5:
+        // Looping sebanyak totalData untuk mengambil inputan user
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan berat ke-" << i + 1 << " dalam ons: ";
+          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
 
-        result->push_back((*data)[i] * 100);
-      }
+          // tidak menggunakan tanda * karena data adalah pointer
+          result->push_back((*data)[i] * 100);
+        }
 
-      clearScreen();
+        clearScreen(); // Membersihkan layar terminal
+        cout << "Hasil konversi: " << endl;
 
-      cout << "Hasil konversi: " << endl;
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << (*data)[i] << " ons = " << (*result)[i] << " g" << endl;
-      }
+        // Looping sebanyak totalData untuk menampilkan hasil konversi
+        for (int i = 0; i < *totalData; i++) {
+          cout << (*data)[i] << " ons = " << (*result)[i] << " g" << endl;
+        }
 
-      pauseScreen();
-      break;
-    case 6:
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << "Masukan berat ke-" << i + 1 << " dalam ons: ";
-        cin >> (*data)[i];
+        pauseScreen(); // Pause program hingga user menekan tombol apapun
+        break;
+      case 6:
+        // Looping sebanyak totalData untuk mengambil inputan user
+        for (int i = 0; i < *totalData; i++) {
+          cout << "Masukan berat ke-" << i + 1 << " dalam ons: ";
+          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
 
-        result->push_back((*data)[i] / 10);
-      }
+          // tidak menggunakan tanda * karena data adalah pointer
+          result->push_back((*data)[i] / 10);
+        }
 
-      clearScreen();
+        clearScreen(); // Membersihkan layar terminal
+        cout << "Hasil konversi: " << endl;
 
-      cout << "Hasil konversi: " << endl;
-      for (int i = 0; i < *totalData; i++)
-      {
-        cout << (*data)[i] << " ons = " << (*result)[i] << " kg" << endl;
-      }
+        // Looping sebanyak totalData untuk menampilkan hasil konversi
+        for (int i = 0; i < *totalData; i++) {
+          cout << (*data)[i] << " ons = " << (*result)[i] << " kg" << endl;
+        }
 
-      pauseScreen();
-      break;
-    default:
-      cout << "Pilihan tidak tersedia" << endl;
+        pauseScreen(); // Pause program hingga user menekan tombol apapun
+        break;
+      default:
+        // Ketika user memilih pilihan yang tidak tersedia
+        cout << "Pilihan tidak tersedia" << endl;
     }
   }
 }
