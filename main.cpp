@@ -1,6 +1,13 @@
 #include <vector>
-#include <conio.h>
 #include <iostream>
+
+/**
+ * Validasi untuk mengecek apakah program dijalankan di Windows atau Linux
+ * Jika program dijalankan di Windows, maka akan menjalankan #include <conio.h>
+ */
+#ifdef _WIN32
+  #include <conio.h>
+#endif
 
 /**
  * Import beberapa fungsi dari namespace std
@@ -171,10 +178,29 @@ void pauseScreen() {
   cout << "Tekan tombol apapun untuk melanjutkan..." << endl;
 
   /**
+   * #ifdef adalah preprocessor directive yang digunakan untuk mengecek apakah suatu macro sudah didefinisikan atau belum
+   * #endif adalah untuk mengakhiri preprocessor directive 
+   * 
+   * #ifdef _WIN32 adalah untuk mengecek apakah program dijalankan di Windows atau tidak
+   * Jika program dijalankan di Windows, maka akan menjalankan getch()
+   * Jika program dijalankan di Linux, maka akan menjalankan system("read -n 1 -s -p \"\"")
    * getch() adalah fungsi untuk mengambil inputan user tanpa menampilkan inputan user
-   * Pada kasus ini kita hanya membutuhkan inputan user untuk melanjutkan program
+   * system("read -n 1 -s -p \"\"") adalah perintah untuk mengambil inputan user tanpa menampilkan inputan user
    */
-  getch();
+  #ifdef _WIN32
+    /**
+     * getch() adalah fungsi untuk mengambil inputan user tanpa menampilkan inputan user
+     * Pada kasus ini kita hanya membutuhkan inputan user untuk melanjutkan program
+     */
+    getch();
+  #else
+    /**
+     * read -n 1 -s -p "" adalah perintah untuk mengambil inputan user tanpa menampilkan inputan user
+     * Pada kasus ini kita hanya membutuhkan inputan user untuk melanjutkan program
+     */
+    system("read -n 1 -s -p \"\"");
+  #endif
+
   clearScreen(); // Membersihkan layar terminal
 }
 
