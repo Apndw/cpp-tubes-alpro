@@ -27,3 +27,9 @@ Start the project
 ~~~bash  
   ./output/main
 ~~~
+
+Or you can use bash script
+
+~~~bash
+  ./run.sh
+~~~
