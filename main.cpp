@@ -1,12 +1,13 @@
-#include <vector>
-#include <iostream>
+#include <string> // Import library string yaitu untuk menggunakan tipe data string
+#include <vector> // Import library vector yaitu array dinamis (ukuran array dapat diubah)
+#include <iostream> // Import library iostream yaitu untuk input dan output
 
 /**
  * Validasi untuk mengecek apakah program dijalankan di Windows atau Linux
  * Jika program dijalankan di Windows, maka akan menjalankan #include <conio.h>
  */
 #ifdef _WIN32
-  #include <conio.h>
+  #include <conio.h> // Import library conio.h yaitu untuk getch() (mengambil inputan user tanpa menampilkan inputan user)
 #endif
 
 /**
@@ -14,12 +15,16 @@
  * std::cin = untuk mengambil inputan user
  * std::cout = untuk menampilkan output
  * std::endl = untuk membuat baris baru
+ * std::string = untuk membuat string
  * std::vector = untuk membuat vector (array dinamis)
+ * std::to_string = untuk mengubah tipe data apapun menjadi string
 */
-using std::cin;
-using std::cout;
-using std::endl;
-using std::vector;
+using std::cin; // Menggunakan std::cin
+using std::cout; // Menggunakan std::cout
+using std::endl; // Menggunakan std::endl
+using std::string; // Menggunakan std::string
+using std::vector; // Menggunakan std::vector
+using std::to_string; // Menggunakan std::to_string
 
 /**
  * @brief Membersihkan layar terminal (Windows & Linux)
@@ -34,6 +39,15 @@ void clearScreen(); // Deklarasi fungsi clearScreen
  * @return void
  */
 void pauseScreen(); // Deklarasi fungsi pauseScreen
+
+/**
+ * @brief Mengambil inputan user dan mengembalikan nilai inputan user
+ * 
+ * @param message pesan yang akan ditampilkan ke user - string
+ * 
+ * @return int
+ */
+int inputData(string message);
 
 /**
  * @brief Konversi suhu (celcius, fahrenheit, kelvin)
@@ -109,8 +123,7 @@ int main() {
     cout << "4) Keluar" << endl;
     cout << "--------------------------------" << endl;
 
-    cout << "Masukkan pilihan: ";
-    cin >> input; // Menyimpan inputan user ke variable input
+    input = inputData("Masukkan pilihan: "); // Mengambil inputan user dan menyimpannya ke variable input
 
     clearScreen(); // Membersihkan layar terminal
 
@@ -205,6 +218,31 @@ void pauseScreen() {
 }
 
 /**
+ * @brief Mengambil inputan user dan mengembalikan nilai inputan user
+ * 
+ * @param message pesan yang akan ditampilkan ke user - string
+ * 
+ * @return int
+ */
+int inputData(string message) {
+  /**
+   * Deklarasi variable input
+   * Variable bersifat lokal karena dideklarasikan di dalam fungsi
+   * Variable input akan menyimpan hasil inputan user
+   */
+  int input;
+
+  // Menampilkan pesan yang diberikan ke user
+  cout << message;
+
+  // Mengambil inputan user dan menyimpannya ke variable input
+  cin >> input;
+
+  // Mengembalikan nilai input
+  return input;
+}
+
+/**
  * @brief Konversi suhu (celcius, fahrenheit, kelvin)
  *
  * @param input pointer untuk menyimpan inputan user - integer
@@ -232,16 +270,15 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
     cout << "7) Kembali" << endl;
     cout << "--------------------------------" << endl;
 
-    cout << "Masukkan pilihan: ";
-    cin >> *input; // Menyimpan inputan user ke variable input dengan pointer
+    *input = inputData("Masukkan pilihan: "); // Mengambil inputan user dan menyimpannya ke variable input dengan pointer
 
     clearScreen(); // Membersihkan layar terminal
 
     // Ketika user memilih kembali, maka program akan berhenti dan kembali ke menu utama
     if (*input == 7) break;
 
-    cout << "Masukan jumlah data suhu yang akan dikonversi: ";
-    cin >> *totalData; // Menyimpan inputan user ke variable totalData dengan pointer
+    // Mengambil inputan user dan menyimpannya ke variable totalData dengan pointer
+    *totalData = inputData("Masukan jumlah data suhu yang akan dikonversi: ");
 
     // resize adalah fungsi untuk mengubah ukuran vector atau panjang array
     (*totalData > 1) ? data->resize(*totalData) : data->resize(1);
@@ -256,8 +293,8 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
       case 1:
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
-          cout << "Masukan suhu ke-" << i + 1 << " dalam celcius: ";
-          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
+          // (*data) yaitu untuk mengambil data dari pointer data
+          (*data)[i] = inputData("Masukan suhu ke-" + to_string(i + 1) + " dalam celcius: ");
 
           // tidak menggunakan tanda * karena data adalah pointer
           result->push_back(((*data)[i] * 9 / 5) + 32);
@@ -276,8 +313,8 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
       case 2:
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
-          cout << "Masukan suhu ke-" << i + 1 << " dalam celcius: ";
-          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
+          // (*data) yaitu untuk mengambil data dari pointer data
+          (*data)[i] = inputData("Masukan suhu ke-" + to_string(i + 1) + " dalam celcius: ");
 
           // tidak menggunakan tanda * karena data adalah pointer
           result->push_back((*data)[i] + 273.15);
@@ -296,8 +333,8 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
       case 3:
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
-          cout << "Masukan suhu ke-" << i + 1 << " dalam fahrenheit: ";
-          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
+          // (*data) yaitu untuk mengambil data dari pointer data
+          (*data)[i] = inputData("Masukan suhu ke-" + to_string(i + 1) + " dalam fahrenheit: ");
 
           // tidak menggunakan tanda * karena data adalah pointer
           result->push_back(((*data)[i] - 32) * 5 / 9);
@@ -316,8 +353,8 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
       case 4:
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
-          cout << "Masukan suhu ke-" << i + 1 << " dalam fahrenheit: ";
-          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
+          // (*data) yaitu untuk mengambil data dari pointer data
+          (*data)[i] = inputData("Masukan suhu ke-" + to_string(i + 1) + " dalam fahrenheit: ");
 
           // tidak menggunakan tanda * karena data adalah pointer
           result->push_back(((*data)[i] - 32) * 5 / 9 + 273.15);
@@ -336,8 +373,8 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
       case 5:
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
-          cout << "Masukan suhu ke-" << i + 1 << " dalam kelvin: ";
-          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
+          // (*data) yaitu untuk mengambil data dari pointer data
+          (*data)[i] = inputData("Masukan suhu ke-" + to_string(i + 1) + " dalam kelvin: ");
 
           // tidak menggunakan tanda * karena data adalah pointer
           result->push_back((*data)[i] - 273.15);
@@ -356,8 +393,8 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
       case 6:
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
-          cout << "Masukan suhu ke-" << i + 1 << " dalam kelvin: ";
-          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
+          // (*data) yaitu untuk mengambil data dari pointer data
+          (*data)[i] = inputData("Masukan suhu ke-" + to_string(i + 1) + " dalam kelvin: ");
 
           // tidak menggunakan tanda * karena data adalah pointer
           result->push_back(((*data)[i] - 273.15) * 9 / 5 + 32);
@@ -407,16 +444,16 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
     cout << "7) Kembali" << endl;
     cout << "--------------------------------" << endl;
 
-    cout << "Masukkan pilihan: ";
-    cin >> *input; // Menyimpan inputan user ke variable input dengan pointer
+    // Mengambil inputan user dan menyimpannya ke variable input dengan pointer
+    *input = inputData("Masukkan pilihan: ");
 
     clearScreen(); // Membersihkan layar terminal
 
     // Ketika user memilih kembali, maka program akan berhenti dan kembali ke menu utama
     if (*input == 7) break;
 
-    cout << "Masukan jumlah data panjang yang akan dikonversi: ";
-    cin >> *totalData; // Menyimpan inputan user ke variable totalData dengan pointer
+    // Mengambil inputan user dan menyimpannya ke variable totalData dengan pointer
+    *totalData = inputData("Masukan jumlah data panjang yang akan dikonversi: ");
 
     // resize adalah fungsi untuk mengubah ukuran vector atau panjang array
     (*totalData > 1) ? data->resize(*totalData) : data->resize(1);
@@ -431,8 +468,8 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
       case 1:
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
-          cout << "Masukan panjang ke-" << i + 1 << " dalam kilometer: ";
-          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
+          // (*data) yaitu untuk mengambil data dari pointer data
+          (*data)[i] = inputData("Masukan panjang ke-" + to_string(i + 1) + " dalam kilometer: ");
 
           // tidak menggunakan tanda * karena data adalah pointer
           result->push_back((*data)[i] * 1000);
@@ -451,8 +488,8 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
       case 2:
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
-          cout << "Masukan panjang ke-" << i + 1 << " dalam kilometer: ";
-          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
+          // (*data) yaitu untuk mengambil data dari pointer data
+          (*data)[i] = inputData("Masukan panjang ke-" + to_string(i + 1) + " dalam kilometer: ");
 
           // tidak menggunakan tanda * karena data adalah pointer
           result->push_back((*data)[i] * 100000);
@@ -471,8 +508,8 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
       case 3:
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
-          cout << "Masukan panjang ke-" << i + 1 << " dalam meter: ";
-          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
+          // (*data) yaitu untuk mengambil data dari pointer data
+          (*data)[i] = inputData("Masukan panjang ke-" + to_string(i + 1) + " dalam meter: ");
 
           // tidak menggunakan tanda * karena data adalah pointer
           result->push_back((*data)[i] / 1000);
@@ -491,8 +528,8 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
       case 4:
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
-          cout << "Masukan panjang ke-" << i + 1 << " dalam meter: ";
-          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
+          // (*data) yaitu untuk mengambil data dari pointer data
+          (*data)[i] = inputData("Masukan panjang ke-" + to_string(i + 1) + " dalam meter: ");
 
           // tidak menggunakan tanda * karena data adalah pointer
           result->push_back((*data)[i] * 100);
@@ -511,8 +548,8 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
       case 5:
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
-          cout << "Masukan panjang ke-" << i + 1 << " dalam centimeter: ";
-          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
+          // (*data) yaitu untuk mengambil data dari pointer data
+          (*data)[i] = inputData("Masukan panjang ke-" + to_string(i + 1) + " dalam centimeter: ");
 
           // tidak menggunakan tanda * karena data adalah pointer
           result->push_back((*data)[i] / 100000);
@@ -531,8 +568,8 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
       case 6:
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
-          cout << "Masukan panjang ke-" << i + 1 << " dalam centimeter: ";
-          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
+          // (*data) yaitu untuk mengambil data dari pointer data
+          (*data)[i] = inputData("Masukan panjang ke-" + to_string(i + 1) + " dalam centimeter: ");
 
           // tidak menggunakan tanda * karena data adalah pointer
           result->push_back((*data)[i] / 100);
@@ -582,16 +619,16 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
     cout << "7) Kembali" << endl;
     cout << "--------------------------------" << endl;
 
-    cout << "Masukkan pilihan: ";
-    cin >> *input; // Menyimpan inputan user ke variable input dengan pointer
+    // Mengambil inputan user dan menyimpannya ke variable input dengan pointer
+    *input = inputData("Masukkan pilihan: ");
 
     clearScreen(); // Membersihkan layar terminal
 
     // Ketika user memilih kembali, maka program akan berhenti dan kembali ke menu utama
     if (*input == 7) break;
 
-    cout << "Masukan jumlah data berat yang akan dikonversi: ";
-    cin >> *totalData; // Menyimpan inputan user ke variable totalData dengan pointer
+    // Mengambil inputan user dan menyimpannya ke variable totalData dengan pointer
+    *totalData = inputData("Masukan jumlah data berat yang akan dikonversi: ");
 
     // resize adalah fungsi untuk mengubah ukuran vector atau panjang array
     (*totalData > 1) ? data->resize(*totalData) : data->resize(1);
@@ -606,8 +643,8 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
       case 1:
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
-          cout << "Masukan berat ke-" << i + 1 << " dalam gram: ";
-          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
+          // (*data) yaitu untuk mengambil data dari pointer data
+          (*data)[i] = inputData("Masukan berat ke-" + to_string(i + 1) + " dalam gram: ");
 
           // tidak menggunakan tanda * karena data adalah pointer
           result->push_back((*data)[i] / 1000);
@@ -626,8 +663,8 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
       case 2:
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
-          cout << "Masukan berat ke-" << i + 1 << " dalam gram: ";
-          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
+          // (*data) yaitu untuk mengambil data dari pointer data
+          (*data)[i] = inputData("Masukan berat ke-" + to_string(i + 1) + " dalam gram: ");
 
           // tidak menggunakan tanda * karena data adalah pointer
           result->push_back((*data)[i] / 10);
@@ -646,8 +683,8 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
       case 3:
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
-          cout << "Masukan berat ke-" << i + 1 << " dalam kilogram: ";
-          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
+          // (*data) yaitu untuk mengambil data dari pointer data
+          (*data)[i] = inputData("Masukan berat ke-" + to_string(i + 1) + " dalam kilogram: ");
 
           // tidak menggunakan tanda * karena data adalah pointer
           result->push_back((*data)[i] * 1000);
@@ -666,8 +703,8 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
       case 4:
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
-          cout << "Masukan berat ke-" << i + 1 << " dalam kilogram: ";
-          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
+          // (*data) yaitu untuk mengambil data dari pointer data
+          (*data)[i] = inputData("Masukan berat ke-" + to_string(i + 1) + " dalam kilogram: ");
 
           // tidak menggunakan tanda * karena data adalah pointer
           result->push_back((*data)[i] * 10);
@@ -686,8 +723,8 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
       case 5:
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
-          cout << "Masukan berat ke-" << i + 1 << " dalam ons: ";
-          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
+          // (*data) yaitu untuk mengambil data dari pointer data
+          (*data)[i] = inputData("Masukan berat ke-" + to_string(i + 1) + " dalam ons: ");
 
           // tidak menggunakan tanda * karena data adalah pointer
           result->push_back((*data)[i] * 100);
@@ -706,8 +743,8 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
       case 6:
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
-          cout << "Masukan berat ke-" << i + 1 << " dalam ons: ";
-          cin >> (*data)[i]; // (*data) yaitu untuk mengambil data dari pointer data
+          // (*data) yaitu untuk mengambil data dari pointer data
+          (*data)[i] = inputData("Masukan berat ke-" + to_string(i + 1) + " dalam ons: ");
 
           // tidak menggunakan tanda * karena data adalah pointer
           result->push_back((*data)[i] / 10);
