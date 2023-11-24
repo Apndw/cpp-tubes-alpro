@@ -27,6 +27,16 @@ using std::vector; // Menggunakan std::vector
 using std::to_string; // Menggunakan std::to_string
 
 /**
+ * @brief Deklarasi variable global
+ * 
+ * indexResult = untuk menyimpan index result
+ * indexResult digunakan untuk menampilkan hasil konversi
+ * indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
+ * indexResult = 0 karena indexResult akan direset ketika program dijalankan
+ */
+int indexResult = 0;
+
+/**
  * @brief Membersihkan layar terminal (Windows & Linux)
  *
  * @return void
@@ -305,7 +315,10 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " C = " << (*result)[i] << " F" << endl;
+          cout << (*data)[i] << " C = " << (*result)[indexResult] << " F" << endl;
+
+          // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
+          indexResult++;
         }
 
         pauseScreen(); // Pause program hingga user menekan tombol apapun
@@ -325,7 +338,10 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " C = " << (*result)[i] << " K" << endl;
+          cout << (*data)[i] << " C = " << (*result)[indexResult] << " K" << endl;
+
+          // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
+          indexResult++;
         }
 
         pauseScreen(); // Pause program hingga user menekan tombol apapun
@@ -345,7 +361,10 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " F = " << (*result)[i] << " C" << endl;
+          cout << (*data)[i] << " F = " << (*result)[indexResult] << " C" << endl;
+
+          // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
+          indexResult++;
         }
 
         pauseScreen(); // Pause program hingga user menekan tombol apapun
@@ -365,7 +384,10 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " F = " << (*result)[i] << " K" << endl;
+          cout << (*data)[i] << " F = " << (*result)[indexResult] << " K" << endl;
+
+          // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
+          indexResult++;
         }
 
         pauseScreen(); // Pause program hingga user menekan tombol apapun
@@ -385,7 +407,10 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " K = " << (*result)[i] << " C" << endl;
+          cout << (*data)[i] << " K = " << (*result)[indexResult] << " C" << endl;
+
+          // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
+          indexResult++;
         }
 
         pauseScreen(); // Pause program hingga user menekan tombol apapun
@@ -405,7 +430,10 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " K = " << (*result)[i] << " F" << endl;
+          cout << (*data)[i] << " K = " << (*result)[indexResult] << " F" << endl;
+
+          // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
+          indexResult++;
         }
 
         pauseScreen(); // Pause program hingga user menekan tombol apapun
@@ -480,7 +508,10 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++){
-          cout << (*data)[i] << " km = " << (*result)[i] << " m" << endl;
+          cout << (*data)[i] << " km = " << (*result)[indexResult] << " m" << endl;
+
+          // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
+          indexResult++;
         }
 
         pauseScreen(); // Pause program hingga user menekan tombol apapun
@@ -500,7 +531,10 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " km = " << (*result)[i] << " cm" << endl;
+          cout << (*data)[i] << " km = " << (*result)[indexResult] << " cm" << endl;
+
+          // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
+          indexResult++;
         }
 
         pauseScreen(); // Pause program hingga user menekan tombol apapun
@@ -520,7 +554,10 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " m = " << (*result)[i] << " km" << endl;
+          cout << (*data)[i] << " m = " << (*result)[indexResult] << " km" << endl;
+
+          // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
+          indexResult++;
         }
 
         pauseScreen(); // Pause program hingga user menekan tombol apapun
@@ -540,7 +577,10 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " m = " << (*result)[i] << " cm" << endl;
+          cout << (*data)[i] << " m = " << (*result)[indexResult] << " cm" << endl;
+
+          // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
+          indexResult++;
         }
 
         pauseScreen(); // Pause program hingga user menekan tombol apapun
@@ -560,7 +600,10 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " cm = " << (*result)[i] << " km" << endl;
+          cout << (*data)[i] << " cm = " << (*result)[indexResult] << " km" << endl;
+
+          // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
+          indexResult++;
         }
 
         pauseScreen(); // Pause program hingga user menekan tombol apapun
@@ -580,7 +623,10 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " cm = " << (*result)[i] << " m" << endl;
+          cout << (*data)[i] << " cm = " << (*result)[indexResult] << " m" << endl;
+
+          // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
+          indexResult++;
         }
 
         pauseScreen(); // Pause program hingga user menekan tombol apapun
@@ -655,7 +701,10 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " g = " << (*result)[i] << " kg" << endl;
+          cout << (*data)[i] << " g = " << (*result)[indexResult] << " kg" << endl;
+
+          // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
+          indexResult++;
         }
 
         pauseScreen(); // Pause program hingga user menekan tombol apapun
@@ -675,7 +724,10 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " g = " << (*result)[i] << " ons" << endl;
+          cout << (*data)[i] << " g = " << (*result)[indexResult] << " ons" << endl;
+
+          // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
+          indexResult++;
         }
 
         pauseScreen(); // Pause program hingga user menekan tombol apapun
@@ -695,7 +747,10 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " kg = " << (*result)[i] << " g" << endl;
+          cout << (*data)[i] << " kg = " << (*result)[indexResult] << " g" << endl;
+
+          // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
+          indexResult++;
         }
 
         pauseScreen(); // Pause program hingga user menekan tombol apapun
@@ -715,7 +770,10 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " kg = " << (*result)[i] << " ons" << endl;
+          cout << (*data)[i] << " kg = " << (*result)[indexResult] << " ons" << endl;
+
+          // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
+          indexResult++;
         }
 
         pauseScreen(); // Pause program hingga user menekan tombol apapun
@@ -735,7 +793,10 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " ons = " << (*result)[i] << " g" << endl;
+          cout << (*data)[i] << " ons = " << (*result)[indexResult] << " g" << endl;
+
+          // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
+          indexResult++;
         }
 
         pauseScreen(); // Pause program hingga user menekan tombol apapun
@@ -755,7 +816,10 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " ons = " << (*result)[i] << " kg" << endl;
+          cout << (*data)[i] << " ons = " << (*result)[indexResult] << " kg" << endl;
+
+          // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
+          indexResult++;
         }
 
         pauseScreen(); // Pause program hingga user menekan tombol apapun
