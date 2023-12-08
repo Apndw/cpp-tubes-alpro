@@ -286,12 +286,13 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
 
     // Ketika user memilih kembali, maka program akan berhenti dan kembali ke menu utama
     if (*input == 7) break;
+    else if (*input > 0 && *input < 7) {
+      // Mengambil inputan user dan menyimpannya ke variable totalData dengan pointer
+      *totalData = inputData("Masukan jumlah data suhu yang akan dikonversi2: ");
 
-    // Mengambil inputan user dan menyimpannya ke variable totalData dengan pointer
-    *totalData = inputData("Masukan jumlah data suhu yang akan dikonversi: ");
-
-    // resize adalah fungsi untuk mengubah ukuran vector atau panjang array
-    (*totalData > 1) ? data->resize(*totalData) : data->resize(1);
+      // resize adalah fungsi untuk mengubah ukuran vector atau panjang array
+      (*totalData > 1) ? data->resize(*totalData) : data->resize(1);
+    }
 
     /**
      * Percabangan untuk menentukan pilihan user
@@ -479,12 +480,13 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
 
     // Ketika user memilih kembali, maka program akan berhenti dan kembali ke menu utama
     if (*input == 7) break;
+    else if (*input > 0 && *input < 7) {
+      // Mengambil inputan user dan menyimpannya ke variable totalData dengan pointer
+      *totalData = inputData("Masukan jumlah data panjang yang akan dikonversi2: ");
 
-    // Mengambil inputan user dan menyimpannya ke variable totalData dengan pointer
-    *totalData = inputData("Masukan jumlah data panjang yang akan dikonversi: ");
-
-    // resize adalah fungsi untuk mengubah ukuran vector atau panjang array
-    (*totalData > 1) ? data->resize(*totalData) : data->resize(1);
+      // resize adalah fungsi untuk mengubah ukuran vector atau panjang array
+      (*totalData > 1) ? data->resize(*totalData) : data->resize(1);
+    }
 
     /**
      * Percabangan untuk menentukan pilihan user
@@ -672,16 +674,17 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
 
     // Ketika user memilih kembali, maka program akan berhenti dan kembali ke menu utama
     if (*input == 7) break;
+    else if (*input > 0 && *input < 7) {
+      // Mengambil inputan user dan menyimpannya ke variable totalData dengan pointer
+      *totalData = inputData("Masukan jumlah data berat yang akan dikonversi2: ");
 
-    // Mengambil inputan user dan menyimpannya ke variable totalData dengan pointer
-    *totalData = inputData("Masukan jumlah data berat yang akan dikonversi: ");
-
-    // resize adalah fungsi untuk mengubah ukuran vector atau panjang array
-    (*totalData > 1) ? data->resize(*totalData) : data->resize(1);
+      // resize adalah fungsi untuk mengubah ukuran vector atau panjang array
+      (*totalData > 1) ? data->resize(*totalData) : data->resize(1);
+    }
 
     /**
      * Percabangan untuk menentukan pilihan user
-     * Ketika user memilih pilihan yang tersedia, maka program akan menjalankan konversi suhu
+     * Ketika user memilih pilihan yang tersedia, maka program akan menjalankan konversi berat
      * Ketika user memilih pilihan yang tidak tersedia, maka program akan menampilkan pesan "Pilihan tidak tersedia"
      * Range pilihan hanya 1 - 6 karena pilihan 7 adalah untuk kembali ke menu utama (break)
      */
