@@ -1,5 +1,6 @@
 #include <string> // Import library string yaitu untuk menggunakan tipe data string
 #include <vector> // Import library vector yaitu array dinamis (ukuran array dapat diubah)
+#include <iomanip> // Import library iomanip yaitu manipulasi data decimal
 #include <iostream> // Import library iostream yaitu untuk input dan output
 
 /**
@@ -14,9 +15,11 @@
 using std::cin; // Menggunakan std::cin
 using std::cout; // Menggunakan std::cout
 using std::endl; // Menggunakan std::endl
+using std::fixed; // Menggunakan std::fixed
 using std::string; // Menggunakan std::string
 using std::vector; // Menggunakan std::vector
 using std::to_string; // Menggunakan std::to_string
+using std::setprecision; // Menggunakan std::setprecision
 
 /**
  * @brief Deklarasi variable global
@@ -151,6 +154,11 @@ int main() {
    */
   vector<float> data, result;
 
+  // Register setprecision untuk handle data yang mencapai nilai jutaan
+  cout << fixed << setprecision(0);
+
+  clearScreen(); // Membersihkan layar terminal
+
   /**
    * Looping akan berjalan selama variable isOnRepeat = true
    * Ketika user memilih keluar, maka variable isOnRepeat akan diubah menjadi false
@@ -160,6 +168,7 @@ int main() {
    */
   do {
     cout << "Selamat datang di posion (pocket conversion)" << endl;
+    cout << "--------------------------------" << endl;
     cout << "1) Konversi Suhu" << endl;
     cout << "2) Konversi Panjang" << endl;
     cout << "3) Konversi Berat" << endl;
@@ -412,7 +421,6 @@ void menampilkanHistory(int jenisData) {
 
   // Menampilkan history data
   if (historyType != 5) {
-    cout << "--------------------------------" << endl;
     cout << "History Konversi " << namaHistory << endl;
     cout << "Total data: " << indexHistory << endl;
     cout << "--------------------------------" << endl;
@@ -585,7 +593,22 @@ void menampilkanHistory(int jenisData) {
      * Note : push_back adalah fungsi untuk menambahkan data ke vector
      */
     for (int i = 0; i < indexHistory; i++) {
-      string tempData = historyData[jenisData][i][pilihan].substr(0, historyData[jenisData][i][pilihan].find(" ")); // Mengambil data awal dari historyData[jenisData][i][pilihan]
+      // Mengambil data awal dari historyData[jenisData][i][pilihan]
+      string tempData = historyData[jenisData][i][pilihan];
+
+      /**
+       * Memisahkan antara hasil konversi dengan satuan konversi
+       * Contoh "72.13821 KM" menjadi hanya "72.13821"
+       * Agar proses pencarian lebih mudah
+       */
+      tempData = tempData.substr(0, historyData[jenisData][i][pilihan].find(" "));
+
+      /**
+       * Memasukan hasil pemisahan pada temp data ke variable data
+       * Proses ini menggunakan system push back
+       * 
+       * Note : push_back adalah fungsi untuk menambahkan data ke vector
+       */
       data.push_back(tempData);
     }
 
@@ -918,7 +941,7 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
     if (*input == 8) break;
     else if (*input > 0 && *input < 7) {
       // Mengambil inputan user dan menyimpannya ke variable totalData dengan pointer
-      *totalData = inputData<float>("Masukan jumlah data panjang yang akan dikonversi2: ");
+      *totalData = inputData<float>("Masukan jumlah data panjang yang akan dikonversi: ");
 
       // resize adalah fungsi untuk mengubah ukuran vector atau panjang array
       (*totalData > 1) ? data->resize(*totalData) : data->resize(1);
