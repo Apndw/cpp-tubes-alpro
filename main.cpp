@@ -3,14 +3,6 @@
 #include <iostream> // Import library iostream yaitu untuk input dan output
 
 /**
- * Validasi untuk mengecek apakah program dijalankan di Windows atau Linux
- * Jika program dijalankan di Windows, maka akan menjalankan #include <conio.h>
- */
-#ifdef _WIN32
-  #include <conio.h> // Import library conio.h yaitu untuk getch() (mengambil inputan user tanpa menampilkan inputan user)
-#endif
-
-/**
  * Import beberapa fungsi dari namespace std
  * std::cin = untuk mengambil inputan user
  * std::cout = untuk menampilkan output
@@ -37,6 +29,26 @@ using std::to_string; // Menggunakan std::to_string
 int indexResult = 0;
 
 /**
+ * @brief Deklarasi variable global
+ * 
+ * indexHistorySuhu = untuk menyimpan index history suhu
+ * indexHistoryPanjang = untuk menyimpan index history panjang
+ * indexHistoryBerat = untuk menyimpan index history berat
+ * index = 0 karena index direset ketika program dijalankan
+ */
+int indexHistorySuhu = 0, indexHistoryPanjang = 0, indexHistoryBerat = 0;
+
+/**
+ * @brief Deklarasi array 3 dimensi secara global
+ * 
+ * historyData = untuk menyimpan history data
+ * historyData[3] = untuk menyimpan 3 jenis data (suhu, panjang, berat)
+ * historyData[3][50] = untuk menyimpan 50 data untuk setiap jenis data
+ * historyData[3][50][3] = untuk menyimpan 3 data untuk setiap data (data awal, hasil konversi, rumus)
+ */
+string historyData[3][50][3];
+
+/**
  * @brief Membersihkan layar terminal (Windows & Linux)
  *
  * @return void
@@ -55,9 +67,30 @@ void pauseScreen(); // Deklarasi fungsi pauseScreen
  * 
  * @param message pesan yang akan ditampilkan ke user - string
  * 
- * @return int
+ * @return T
  */
-int inputData(string message);
+template <typename T> T inputData(string message);
+
+/**
+ * @brief Memasukkan data ke history
+ * 
+ * @param data yaitu data awal yang akan dimasukkan ke history - string
+ * @param result yaitu hasil konversi yang akan dimasukkan ke history - string
+ * @param rumus yaitu rumus konversi yang akan dimasukkan ke history - string
+ * @param jenisData yaitu jenis data yang akan dimasukkan ke history - integer
+ *
+ * @return void
+ */
+void handleHistory(string data, string result, string rumus, int jenisData);
+
+/**
+ * @brief Menampilkan history
+ * 
+ * @param jenisData yaitu jenis data yang akan ditampilkan - integer
+ *
+ * @return void
+ */
+void menampilkanHistory(int jenisData);
 
 /**
  * @brief Konversi suhu (celcius, fahrenheit, kelvin)
@@ -133,7 +166,7 @@ int main() {
     cout << "4) Keluar" << endl;
     cout << "--------------------------------" << endl;
 
-    input = inputData("Masukkan pilihan: "); // Mengambil inputan user dan menyimpannya ke variable input
+    input = inputData<int>("Masukkan pilihan: "); // Mengambil inputan user dan menyimpannya ke variable input
 
     clearScreen(); // Membersihkan layar terminal
 
@@ -198,25 +231,25 @@ void clearScreen() {
  * @return void
  */
 void pauseScreen() {
-  cout << "Tekan tombol apapun untuk melanjutkan..." << endl;
-
   /**
    * #ifdef adalah preprocessor directive yang digunakan untuk mengecek apakah suatu macro sudah didefinisikan atau belum
    * #endif adalah untuk mengakhiri preprocessor directive 
    * 
    * #ifdef _WIN32 adalah untuk mengecek apakah program dijalankan di Windows atau tidak
-   * Jika program dijalankan di Windows, maka akan menjalankan getch()
+   * Jika program dijalankan di Windows, maka akan menjalankan system("pause")
    * Jika program dijalankan di Linux, maka akan menjalankan system("read -n 1 -s -p \"\"")
-   * getch() adalah fungsi untuk mengambil inputan user tanpa menampilkan inputan user
+   * system("pause") adalah fungsi untuk menjeda aplikasi hingga user menekan tombol apapun
    * system("read -n 1 -s -p \"\"") adalah perintah untuk mengambil inputan user tanpa menampilkan inputan user
    */
   #ifdef _WIN32
     /**
-     * getch() adalah fungsi untuk mengambil inputan user tanpa menampilkan inputan user
+     * system("pause") adalah fungsi untuk menjeda aplikasi hingga user menekan tombol apapun
      * Pada kasus ini kita hanya membutuhkan inputan user untuk melanjutkan program
      */
-    getch();
+    system("pause");
   #else
+    cout << "Tekan tombol apapun untuk melanjutkan..." << endl;
+
     /**
      * read -n 1 -s -p "" adalah perintah untuk mengambil inputan user tanpa menampilkan inputan user
      * Pada kasus ini kita hanya membutuhkan inputan user untuk melanjutkan program
@@ -232,24 +265,362 @@ void pauseScreen() {
  * 
  * @param message pesan yang akan ditampilkan ke user - string
  * 
- * @return int
+ * @return T
  */
-int inputData(string message) {
+template <typename T> T inputData(string message) {
   /**
    * Deklarasi variable input
    * Variable bersifat lokal karena dideklarasikan di dalam fungsi
    * Variable input akan menyimpan hasil inputan user
+   * T adalah tipe data yang akan digunakan (int, float, double, string, char)
    */
-  int input;
+  T input;
 
   // Menampilkan pesan yang diberikan ke user
   cout << message;
 
   // Mengambil inputan user dan menyimpannya ke variable input
+  // Jika T adalah float atau double, maka inputan user akan diubah menjadi float atau double 
   cin >> input;
 
   // Mengembalikan nilai input
   return input;
+}
+
+/**
+ * @brief Memasukkan data ke history
+ * 
+ * @param data yaitu data awal yang akan dimasukkan ke history - string
+ * @param result yaitu hasil konversi yang akan dimasukkan ke history - string
+ * @param rumus yaitu rumus konversi yang akan dimasukkan ke history - string
+ * @param jenisData yaitu jenis data yang akan dimasukkan ke history - integer
+ *
+ * @return void
+ */
+void handleHistory(string data, string result, string rumus, int jenisData) {
+  // Jika jenisData tidak tersedia, akan keluar dari fungsi
+  if (jenisData < 1 || jenisData > 3) {
+    cout << "Proses menyimpan history gagal, jenis data tidak tersedia" << endl;
+    return;
+  }
+
+  /**
+   * indexHistory = untuk menyimpan index history data
+   * indexHistory digunakan untuk menentukan index history data
+   */
+  int *indexHistory;
+
+  /**
+   * Percabangan untuk menentukan indexHistory
+   * Ketika jenisData = 1, maka indexHistory = &indexHistorySuhu
+   * Ketika jenisData = 2, maka indexHistory = &indexHistoryPanjang
+   * Ketika jenisData = 3, maka indexHistory = &indexHistoryBerat
+   */
+  if (jenisData == 1) indexHistory = &indexHistorySuhu;
+  else if (jenisData == 2) indexHistory = &indexHistoryPanjang;
+  else if (jenisData == 3) indexHistory = &indexHistoryBerat;
+
+  // Mengubah value jenisData menjadi index historyData
+  jenisData--;
+
+  historyData[jenisData][*indexHistory][0] = data; // Menyimpan data awal ke historyData
+  historyData[jenisData][*indexHistory][1] = result; // Menyimpan hasil konversi ke historyData
+  historyData[jenisData][*indexHistory][2] = rumus; // Menyimpan rumus ke historyData
+
+  // indexHistory++ digunakan untuk menambahkan indexHistory sebanyak 1
+  (*indexHistory)++;
+}
+
+/**
+ * @brief Menampilkan history
+ * 
+ * @param jenisData yaitu jenis data yang akan ditampilkan - integer
+ *
+ * @return void
+ */
+void menampilkanHistory(int jenisData) {
+  // Jika jenisData tidak tersedia, akan keluar dari fungsi
+  if (jenisData < 1 || jenisData > 3) {
+    cout << "Proses menampilkan history gagal, jenis data tidak tersedia" << endl;
+    return;
+  }
+
+  /**
+   * namaHistory = untuk menyimpan nama history data
+   * namaHistory digunakan untuk menentukan nama history data
+   */
+  string namaHistory;
+
+  /**
+   * Percabangan untuk menentukan nama history
+   * Ketika jenisData = 1, maka namaHistory = "Suhu"
+   * Ketika jenisData = 2, maka namaHistory = "Panjang"
+   * Ketika jenisData = 3, maka namaHistory = "Berat"
+   */
+  if (jenisData == 1) namaHistory = "Suhu";
+  else if (jenisData == 2) namaHistory = "Panjang";
+  else if (jenisData == 3) namaHistory = "Berat";
+
+  /**
+   * historyType = untuk menyimpan jenis history data
+   * historyType digunakan untuk menentukan jenis history data
+   */
+  int historyType;
+
+  // Menampilkan jenis history data
+  cout << "Menu history " << namaHistory << endl;
+  cout << "--------------------------------" << endl;
+  cout << "1) Hasil Terlama ke terbaru" << endl;
+  cout << "2) Hasil Terbaru ke terlama" << endl;
+  cout << "3) Hasil tertinggi ke terendah" << endl;
+  cout << "4) Hasil terendah ke tertinggi" << endl;
+  cout << "5) Mencari data" << endl;
+  cout << "6) Kembali" << endl;
+  cout << "--------------------------------" << endl;
+
+  // Menanyakan user ingin melihat history jenis data apa
+  historyType = inputData<int>("Masukan pilihan anda: ");
+
+  clearScreen(); // Membersihkan layar terminal
+
+  // Ketika user memilih kembali, maka program akan berhenti dan kembali ke menu utama
+  if (historyType == 6) return;
+  else if (historyType < 1 || historyType > 6) {
+    // Ketika user memilih pilihan yang tidak tersedia
+    cout << "Proses menampilkan history gagal, pilihan tidak tersedia" << endl;
+    return;
+  }
+
+  /**
+   * indexHistory = untuk menyimpan index history data
+   * indexHistory digunakan untuk menentukan index history data
+   */
+  int indexHistory;
+
+  /**
+   * Percabangan untuk menentukan indexHistory dan namaHistory
+   * Ketika jenisData = 1, maka indexHistory = indexHistorySuhu
+   * Ketika jenisData = 2, maka indexHistory = indexHistoryPanjang 
+   * Ketika jenisData = 3, maka indexHistory = indexHistoryBerat
+   */
+  if (jenisData == 1) indexHistory = indexHistorySuhu;
+  else if (jenisData == 2) indexHistory = indexHistoryPanjang;
+  else if (jenisData == 3) indexHistory = indexHistoryBerat;
+
+  // Mengubah value jenisData menjadi index historyData
+  jenisData--;
+
+  // Menampilkan history data
+  if (historyType != 5) {
+    cout << "--------------------------------" << endl;
+    cout << "History Konversi " << namaHistory << endl;
+    cout << "Total data: " << indexHistory << endl;
+    cout << "--------------------------------" << endl;
+  }
+
+  if (indexHistory == 0) {
+    // Ketika indexHistory = 0, maka tidak ada history data
+    cout << "Belum ada history yang tersedia" << endl;
+    cout << "--------------------------------" << endl;
+    goto ending; // Loncat ke label ending untuk mengakhiri program
+  }
+
+  if (historyType == 1) {
+    /**
+     * Looping sebanyak indexHistory untuk menampilkan history data
+     * Mengambil data dari historyData[jenisData][0] yaitu data awal
+     * Dengan ini kita menampilkan data dari terlama ke terbaru
+     */
+    for (int i = 0; i < indexHistory; i++) {
+      cout << "Data awal: " << historyData[jenisData][i][0] << endl; // Menampilkan data awal
+      cout << "Hasil konversi: " << historyData[jenisData][i][1] << endl; // Menampilkan hasil konversi
+      cout << "Rumus: " << historyData[jenisData][i][2] << endl; // Menampilkan rumus
+      cout << "--------------------------------" << endl;
+    }
+  } else if (historyType == 2) {
+    /**
+     * Looping sebanyak indexHistory untuk menampilkan history data
+     * Mengambil data dari historyData[jenisData][indexHistory - 1] yaitu data terbaru
+     * Dengan ini kita menampilkan data dari terbaru ke terlama
+     */
+    for (int i = indexHistory - 1; i >= 0; i--) {
+      cout << "Data awal: " << historyData[jenisData][i][0] << endl; // Menampilkan data awal
+      cout << "Hasil konversi: " << historyData[jenisData][i][1] << endl; // Menampilkan hasil konversi
+      cout << "Rumus: " << historyData[jenisData][i][2] << endl; // Menampilkan rumus
+      cout << "--------------------------------" << endl;
+    }
+  } else if (historyType == 3) {
+    // Mendeklarasi variable untuk menampung data yang akan diurutkan ke vector data
+    vector<float> data;
+
+    /**
+     * Melakukan looping sebanyak total indexHistory
+     * untuk mengambil data dari historyData[jenisData][i][1] yaitu hasil konversi
+     * 
+     * Note : stof adalah fungsi untuk mengubah string menjadi float
+     * Note : push_back adalah fungsi untuk menambahkan data ke vector
+     */
+    for (int i = 0; i < indexHistory; i++) {
+      data.push_back(stof(historyData[jenisData][i][1]));
+    }
+
+    /**
+     * Looping sebanyak total indexHistory
+     * Pada nested loop ini kita akan melakukan perbandingan data
+     * Jika data[i] lebih kecil dari data[j], maka data[i] akan ditukar dengan data[j]
+     * Agar data terurut dari yang terbesar ke terkecil
+     */
+    for (int i = 0; i < indexHistory; i++) {
+      for (int j = i + 1; j < indexHistory; j++) {
+        // Jika data[i] lebih kecil dari data[j], maka data[i] akan ditukar dengan data[j]
+        if (data[i] < data[j]) {
+          float temp = data[i]; // Mendeklarasi variable temp untuk menyimpan data[i]
+          data[i] = data[j]; // Mengubah data[i] menjadi data[j]
+          data[j] = temp; // Mengubah data[j] menjadi temp (data[i])
+        }
+      }
+    }
+
+    /**
+     * Looping sebanyak total indexHistory
+     * Mengambil data dari historyData[jenisData][i][1] yaitu hasil konversi
+     * Dan kita bandingkan dengan hasil konversi yang sudah diurutkan
+     * Dengan ini kita menampilkan data dari tertinggi ke terendah
+     * 
+     * Note : stof adalah fungsi untuk mengubah string menjadi float
+     */
+    for (int i = 0; i < indexHistory; i++) {
+      for (int j = 0; j < indexHistory; j++) {
+        // Jika data[i] sama dengan historyData[jenisData][j][1], maka kita tampilkan data awal, hasil konversi, dan rumus
+        if (data[i] == stof(historyData[jenisData][j][1])) {
+          cout << "Data awal: " << historyData[jenisData][j][0] << endl; // Menampilkan data awal
+          cout << "Hasil konversi: " << historyData[jenisData][j][1] << endl; // Menampilkan hasil konversi
+          cout << "Rumus: " << historyData[jenisData][j][2] << endl; // Menampilkan rumus
+          cout << "--------------------------------" << endl;
+        }
+      }
+    }
+  } else if (historyType == 4) {
+    // Mendeklarasi variable untuk menampung data yang akan diurutkan ke vector data
+    vector<float> data;
+
+    /**
+     * Melakukan looping sebanyak total indexHistory
+     * untuk mengambil data dari historyData[jenisData][i][1] yaitu hasil konversi
+     * 
+     * Note : stof adalah fungsi untuk mengubah string menjadi float
+     * Note : push_back adalah fungsi untuk menambahkan data ke vector
+     */
+    for (int i = 0; i < indexHistory; i++) {
+      data.push_back(stof(historyData[jenisData][i][1]));
+    }
+
+    /**
+     * Looping sebanyak total indexHistory
+     * Pada nested loop ini kita akan melakukan perbandingan data
+     * Jika data[i] lebih besar dari data[j], maka data[i] akan ditukar dengan data[j]
+     * Agar data terurut dari yang terkecil ke terbesar
+     */
+    for (int i = 0; i < indexHistory; i++) {
+      for (int j = i + 1; j < indexHistory; j++) {
+        // Jika data[i] lebih besar dari data[j], maka data[i] akan ditukar dengan data[j]
+        if (data[i] > data[j]) {
+          float temp = data[i]; // Mendeklarasi variable temp untuk menyimpan data[i]
+          data[i] = data[j]; // Mengubah data[i] menjadi data[j]
+          data[j] = temp; // Mengubah data[j] menjadi temp (data[i])
+        }
+      }
+    }
+
+    /**
+     * Looping sebanyak total indexHistory
+     * Mengambil data dari historyData[jenisData][i][1] yaitu hasil konversi
+     * Dan kita bandingkan dengan hasil konversi yang sudah diurutkan
+     * Dengan ini kita menampilkan data dari tertinggi ke terendah
+     * 
+     * Note : stof adalah fungsi untuk mengubah string menjadi float
+     */
+    for (int i = 0; i < indexHistory; i++) {
+      for (int j = 0; j < indexHistory; j++) {
+        // Jika data[i] sama dengan historyData[jenisData][j][1], maka kita tampilkan data awal, hasil konversi, dan rumus
+        if (data[i] == stof(historyData[jenisData][j][1])) {
+          cout << "Data awal: " << historyData[jenisData][j][0] << endl; // Menampilkan data awal
+          cout << "Hasil konversi: " << historyData[jenisData][j][1] << endl; // Menampilkan hasil konversi
+          cout << "Rumus: " << historyData[jenisData][j][2] << endl; // Menampilkan rumus
+          cout << "--------------------------------" << endl;
+        }
+      }
+    }
+  } else {
+    // Mendeklarasi variable untuk menampung data yang akan diurutkan ke vector data
+    string dataSearch;
+    vector<string> data;
+    bool isFound = false;
+
+    // Menanyakan user apakah akan mencari berdasarkan data awal atau hasil konversi
+    int pilihan = inputData<int>("Cari berdasarkan data awal atau hasil konversi? (1 = data awal, 2 = hasil konversi): ");
+
+    // Ketika user memilih pilihan yang tidak tersedia
+    if (pilihan < 1 || pilihan > 2) {
+      cout << "Proses menampilkan history gagal, pilihan tidak tersedia" << endl;
+      return;
+    }
+
+    // Menanyakan user data yang akan dicari
+    dataSearch = inputData<string>("Masukan data yang akan dicari: ");
+
+    // Memvalidasi inputan user apakah kosong atau tidak
+    if (dataSearch.empty()) {
+      cout << "Proses menampilkan history gagal, data tidak boleh kosong" << endl;
+      return;
+    }
+
+    pilihan--; // Mengubah value pilihan menjadi index historyData
+
+    /**
+     * Melakukan looping sebanyak total indexHistory
+     * untuk mengambil data dari historyData[jenisData][i][pilihan] yaitu data awal atau hasil konversi
+     * 
+     * Note : stof adalah fungsi untuk mengubah string menjadi float
+     * Note : push_back adalah fungsi untuk menambahkan data ke vector
+     */
+    for (int i = 0; i < indexHistory; i++) {
+      string tempData = historyData[jenisData][i][pilihan].substr(0, historyData[jenisData][i][pilihan].find(" ")); // Mengambil data awal dari historyData[jenisData][i][pilihan]
+      data.push_back(tempData);
+    }
+
+    /**
+     * Looping sebanyak total indexHistory
+     * Mengambil data dari historyData[jenisData][i][1] yaitu hasil konversi
+     * Dan kita bandingkan dengan hasil konversi yang sudah diurutkan
+     * Dengan ini kita menampilkan data dari tertinggi ke terendah
+     * 
+     * Note : stof adalah fungsi untuk mengubah string menjadi float
+     */
+    for (int i = 0; i < indexHistory; i++) {
+      // Mencari apakah data yang dicari ada di dalam vector data
+      size_t pos = data[i].find(dataSearch);
+
+      // Jika data ditemukan, maka kita tampilkan data awal, hasil konversi, dan rumus
+      if (pos != string::npos) {
+        cout << "Data awal: " << historyData[jenisData][i][0] << endl; // Menampilkan data awal
+        cout << "Hasil konversi: " << historyData[jenisData][i][1] << endl; // Menampilkan hasil konversi
+        cout << "Rumus: " << historyData[jenisData][i][2] << endl; // Menampilkan rumus
+        cout << "--------------------------------" << endl;
+
+        isFound = true; // Mengubah value isFound menjadi true
+      }
+    }
+
+    // Ketika data tidak ditemukan
+    if (!isFound) {
+      cout << "Data tidak ditemukan" << endl;
+      cout << "--------------------------------" << endl;
+    }
+  }
+
+  ending: // Label ending untuk mengakhiri program
+  pauseScreen(); // Pause program hingga user menekan tombol apapun
 }
 
 /**
@@ -277,18 +648,20 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
     cout << "4) Fahrenheit ke Kelvin" << endl;
     cout << "5) Kelvin ke Celcius" << endl;
     cout << "6) Kelvin ke Fahrenheit" << endl;
-    cout << "7) Kembali" << endl;
+    cout << "7) Lihat History" << endl;
+    cout << "8) Kembali" << endl;
     cout << "--------------------------------" << endl;
 
-    *input = inputData("Masukkan pilihan: "); // Mengambil inputan user dan menyimpannya ke variable input dengan pointer
+    // Mengambil inputan user dan menyimpannya ke variable input dengan pointer
+    *input = inputData<int>("Masukkan pilihan: ");
 
     clearScreen(); // Membersihkan layar terminal
 
     // Ketika user memilih kembali, maka program akan berhenti dan kembali ke menu utama
-    if (*input == 7) break;
-    else if (*input > 0 && *input < 7) {
+    if (*input == 8) break;
+    else if (*input > 0 && *input < 7) { // range pilihan hanya 1 - 6 karena 7 adalah untuk melihat history
       // Mengambil inputan user dan menyimpannya ke variable totalData dengan pointer
-      *totalData = inputData("Masukan jumlah data suhu yang akan dikonversi2: ");
+      *totalData = inputData<int>("Masukan jumlah data suhu yang akan dikonversi: ");
 
       // resize adalah fungsi untuk mengubah ukuran vector atau panjang array
       (*totalData > 1) ? data->resize(*totalData) : data->resize(1);
@@ -298,17 +671,27 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
      * Percabangan untuk menentukan pilihan user
      * Ketika user memilih pilihan yang tersedia, maka program akan menjalankan konversi suhu
      * Ketika user memilih pilihan yang tidak tersedia, maka program akan menampilkan pesan "Pilihan tidak tersedia"
-     * Range pilihan hanya 1 - 6 karena pilihan 7 adalah untuk kembali ke menu utama (break)
+     * Range pilihan hanya 1 - 7 karena pilihan 8 adalah untuk kembali ke menu utama (break)
      */
     switch (*input) {
       case 1:
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
           // (*data) yaitu untuk mengambil data dari pointer data
-          (*data)[i] = inputData("Masukan suhu ke-" + to_string(i + 1) + " dalam celcius: ");
+          (*data)[i] = inputData<float>("Masukan suhu ke-" + to_string(i + 1) + " dalam celcius: ");
+
+          // Convert data ke hasil
+          float hasil = ((*data)[i] * 9 / 5) + 32;
 
           // tidak menggunakan tanda * karena data adalah pointer
-          result->push_back(((*data)[i] * 9 / 5) + 32);
+          // push_back adalah fungsi untuk menambahkan data ke vector
+          // jadi disini kita menambahkan hasil ke vector result
+          // push_back adalah fungsi untuk menambahkan data ke vector
+          // jadi disini kita menambahkan hasil ke vector result
+          result->push_back(hasil);
+
+          // Mengirimkan data awal, hasil konversi, dan rumus ke fungsi handleHistory
+          handleHistory(to_string((*data)[i]) + " C", to_string(hasil) + " F", "(data * 9 / 5) + 32", 1);
         }
 
         clearScreen(); // Membersihkan layar terminal
@@ -328,10 +711,20 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
           // (*data) yaitu untuk mengambil data dari pointer data
-          (*data)[i] = inputData("Masukan suhu ke-" + to_string(i + 1) + " dalam celcius: ");
+          (*data)[i] = inputData<float>("Masukan suhu ke-" + to_string(i + 1) + " dalam celcius: ");
+
+          // Convert data ke hasil
+          float hasil = (*data)[i] + 273.15;
 
           // tidak menggunakan tanda * karena data adalah pointer
-          result->push_back((*data)[i] + 273.15);
+          // push_back adalah fungsi untuk menambahkan data ke vector
+          // jadi disini kita menambahkan hasil ke vector result
+          // push_back adalah fungsi untuk menambahkan data ke vector
+          // jadi disini kita menambahkan hasil ke vector result
+          result->push_back(hasil);
+
+          // Mengirimkan data awal, hasil konversi, dan rumus ke fungsi handleHistory
+          handleHistory(to_string((*data)[i]) + " C", to_string(hasil) + " K", "data + 273.15", 1);
         }
 
         clearScreen(); // Membersihkan layar terminal
@@ -351,10 +744,18 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
           // (*data) yaitu untuk mengambil data dari pointer data
-          (*data)[i] = inputData("Masukan suhu ke-" + to_string(i + 1) + " dalam fahrenheit: ");
+          (*data)[i] = inputData<float>("Masukan suhu ke-" + to_string(i + 1) + " dalam fahrenheit: ");
+
+          // Convert data ke hasil
+          float hasil = ((*data)[i] - 32) * 5 / 9;
 
           // tidak menggunakan tanda * karena data adalah pointer
-          result->push_back(((*data)[i] - 32) * 5 / 9);
+          // push_back adalah fungsi untuk menambahkan data ke vector
+          // jadi disini kita menambahkan hasil ke vector result
+          result->push_back(hasil);
+
+          // Mengirimkan data awal, hasil konversi, dan rumus ke fungsi handleHistory
+          handleHistory(to_string((*data)[i]) + " F", to_string(hasil) + " C", "(data - 32) * 5 / 9", 1);
         }
 
         clearScreen(); // Membersihkan layar terminal
@@ -374,10 +775,18 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
           // (*data) yaitu untuk mengambil data dari pointer data
-          (*data)[i] = inputData("Masukan suhu ke-" + to_string(i + 1) + " dalam fahrenheit: ");
+          (*data)[i] = inputData<float>("Masukan suhu ke-" + to_string(i + 1) + " dalam fahrenheit: ");
+
+          // Convert data ke hasil
+          float hasil = ((*data)[i] - 32) * 5 / 9 + 273.15;
 
           // tidak menggunakan tanda * karena data adalah pointer
-          result->push_back(((*data)[i] - 32) * 5 / 9 + 273.15);
+          // push_back adalah fungsi untuk menambahkan data ke vector
+          // jadi disini kita menambahkan hasil ke vector result
+          result->push_back(hasil);
+
+          // Mengirimkan data awal, hasil konversi, dan rumus ke fungsi handleHistory
+          handleHistory(to_string((*data)[i]) + " F", to_string(hasil) + " K", "(data - 32) * 5 / 9 + 273.15", 1);
         }
 
         clearScreen(); // Membersihkan layar terminal
@@ -397,10 +806,18 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
           // (*data) yaitu untuk mengambil data dari pointer data
-          (*data)[i] = inputData("Masukan suhu ke-" + to_string(i + 1) + " dalam kelvin: ");
+          (*data)[i] = inputData<float>("Masukan suhu ke-" + to_string(i + 1) + " dalam kelvin: ");
+
+          // Convert data ke hasil
+          float hasil = (*data)[i] - 273.15;
 
           // tidak menggunakan tanda * karena data adalah pointer
+          // push_back adalah fungsi untuk menambahkan data ke vector
+          // jadi disini kita menambahkan hasil ke vector result
           result->push_back((*data)[i] - 273.15);
+
+          // Mengirimkan data awal, hasil konversi, dan rumus ke fungsi handleHistory
+          handleHistory(to_string((*data)[i]) + " K", to_string(hasil) + " C", "data - 273.15", 1);
         }
 
         clearScreen(); // Membersihkan layar terminal
@@ -420,10 +837,18 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
           // (*data) yaitu untuk mengambil data dari pointer data
-          (*data)[i] = inputData("Masukan suhu ke-" + to_string(i + 1) + " dalam kelvin: ");
+          (*data)[i] = inputData<float>("Masukan suhu ke-" + to_string(i + 1) + " dalam kelvin: ");
+
+          // Convert data ke hasil
+          float hasil = ((*data)[i] - 273.15) * 9 / 5 + 32;
 
           // tidak menggunakan tanda * karena data adalah pointer
-          result->push_back(((*data)[i] - 273.15) * 9 / 5 + 32);
+          // push_back adalah fungsi untuk menambahkan data ke vector
+          // jadi disini kita menambahkan hasil ke vector result
+          result->push_back(hasil);
+
+          // Mengirimkan data awal, hasil konversi, dan rumus ke fungsi handleHistory
+          handleHistory(to_string((*data)[i]) + " K", to_string(hasil) + " F", "(data - 273.15) * 9 / 5 + 32", 1);
         }
 
         clearScreen(); // Membersihkan layar terminal
@@ -438,6 +863,16 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
         }
 
         pauseScreen(); // Pause program hingga user menekan tombol apapun
+        break;
+      case 7:
+        /**
+         * Menampilkan history konversi
+         * Parameter 1 yaitu untuk menentukan jenis data
+         * 1 = suhu
+         * 2 = panjang
+         * 3 = berat
+         */
+        menampilkanHistory(1);
         break;
       default:
         // Ketika user memilih pilihan yang tidak tersedia
@@ -470,19 +905,20 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
     cout << "4) Meter ke Centimeter" << endl;
     cout << "5) Centimeter ke Kilometer" << endl;
     cout << "6) Centimeter ke Meter" << endl;
-    cout << "7) Kembali" << endl;
+    cout << "7) Lihat History" << endl;
+    cout << "8) Kembali" << endl;
     cout << "--------------------------------" << endl;
 
     // Mengambil inputan user dan menyimpannya ke variable input dengan pointer
-    *input = inputData("Masukkan pilihan: ");
+    *input = inputData<int>("Masukkan pilihan: ");
 
     clearScreen(); // Membersihkan layar terminal
 
     // Ketika user memilih kembali, maka program akan berhenti dan kembali ke menu utama
-    if (*input == 7) break;
+    if (*input == 8) break;
     else if (*input > 0 && *input < 7) {
       // Mengambil inputan user dan menyimpannya ke variable totalData dengan pointer
-      *totalData = inputData("Masukan jumlah data panjang yang akan dikonversi2: ");
+      *totalData = inputData<float>("Masukan jumlah data panjang yang akan dikonversi2: ");
 
       // resize adalah fungsi untuk mengubah ukuran vector atau panjang array
       (*totalData > 1) ? data->resize(*totalData) : data->resize(1);
@@ -492,17 +928,25 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
      * Percabangan untuk menentukan pilihan user
      * Ketika user memilih pilihan yang tersedia, maka program akan menjalankan konversi panjang
      * Ketika user memilih pilihan yang tidak tersedia, maka program akan menampilkan pesan "Pilihan tidak tersedia"
-     * Range pilihan hanya 1 - 6 karena pilihan 7 adalah untuk kembali ke menu utama (break)
+     * Range pilihan hanya 1 - 7 karena pilihan 8 adalah untuk kembali ke menu utama (break)
      */
     switch (*input) {
       case 1:
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
           // (*data) yaitu untuk mengambil data dari pointer data
-          (*data)[i] = inputData("Masukan panjang ke-" + to_string(i + 1) + " dalam kilometer: ");
+          (*data)[i] = inputData<float>("Masukan panjang ke-" + to_string(i + 1) + " dalam kilometer: ");
+
+          // Convert data ke hasil
+          float hasil = (*data)[i] * 1000;
 
           // tidak menggunakan tanda * karena data adalah pointer
-          result->push_back((*data)[i] * 1000);
+          // push_back adalah fungsi untuk menambahkan data ke vector
+          // jadi disini kita menambahkan hasil ke vector result
+          result->push_back(hasil);
+
+          // Mengirimkan data awal, hasil konversi, dan rumus ke fungsi handleHistory
+          handleHistory(to_string((*data)[i]) + " KM", to_string(hasil) + " M", "(data * 1000)", 2);
         }
 
         clearScreen(); // Membersihkan layar terminal
@@ -522,10 +966,18 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
           // (*data) yaitu untuk mengambil data dari pointer data
-          (*data)[i] = inputData("Masukan panjang ke-" + to_string(i + 1) + " dalam kilometer: ");
+          (*data)[i] = inputData<float>("Masukan panjang ke-" + to_string(i + 1) + " dalam kilometer: ");
+
+          // Convert data ke hasil
+          float hasil = (*data)[i] * 100000;
 
           // tidak menggunakan tanda * karena data adalah pointer
-          result->push_back((*data)[i] * 100000);
+          // push_back adalah fungsi untuk menambahkan data ke vector
+          // jadi disini kita menambahkan hasil ke vector result
+          result->push_back(hasil);
+
+          // Mengirimkan data awal, hasil konversi, dan rumus ke fungsi handleHistory
+          handleHistory(to_string((*data)[i]) + " KM", to_string(hasil) + " CM", "(data * 100000)", 2);
         }
 
         clearScreen(); // Membersihkan layar terminal
@@ -545,10 +997,18 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
           // (*data) yaitu untuk mengambil data dari pointer data
-          (*data)[i] = inputData("Masukan panjang ke-" + to_string(i + 1) + " dalam meter: ");
+          (*data)[i] = inputData<float>("Masukan panjang ke-" + to_string(i + 1) + " dalam meter: ");
+
+          // Convert data ke hasil
+          float hasil = (*data)[i] / 1000;
 
           // tidak menggunakan tanda * karena data adalah pointer
-          result->push_back((*data)[i] / 1000);
+          // push_back adalah fungsi untuk menambahkan data ke vector
+          // jadi disini kita menambahkan hasil ke vector result
+          result->push_back(hasil);
+
+          // Mengirimkan data awal, hasil konversi, dan rumus ke fungsi handleHistory
+          handleHistory(to_string((*data)[i]) + " M", to_string(hasil) + " KM", "(data / 1000)", 2);
         }
 
         clearScreen(); // Membersihkan layar terminal
@@ -568,10 +1028,18 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
           // (*data) yaitu untuk mengambil data dari pointer data
-          (*data)[i] = inputData("Masukan panjang ke-" + to_string(i + 1) + " dalam meter: ");
+          (*data)[i] = inputData<float>("Masukan panjang ke-" + to_string(i + 1) + " dalam meter: ");
+
+          // Convert data ke hasil
+          float hasil = (*data)[i] * 100;
 
           // tidak menggunakan tanda * karena data adalah pointer
-          result->push_back((*data)[i] * 100);
+          // push_back adalah fungsi untuk menambahkan data ke vector
+          // jadi disini kita menambahkan hasil ke vector result
+          result->push_back(hasil);
+
+          // Mengirimkan data awal, hasil konversi, dan rumus ke fungsi handleHistory
+          handleHistory(to_string((*data)[i]) + " M", to_string(hasil) + " CM", "(data * 100)", 2);
         }
 
         clearScreen(); // Membersihkan layar terminal
@@ -591,10 +1059,18 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
           // (*data) yaitu untuk mengambil data dari pointer data
-          (*data)[i] = inputData("Masukan panjang ke-" + to_string(i + 1) + " dalam centimeter: ");
+          (*data)[i] = inputData<float>("Masukan panjang ke-" + to_string(i + 1) + " dalam centimeter: ");
+
+          // Convert data ke hasil
+          float hasil = (*data)[i] / 100000;
 
           // tidak menggunakan tanda * karena data adalah pointer
-          result->push_back((*data)[i] / 100000);
+          // push_back adalah fungsi untuk menambahkan data ke vector
+          // jadi disini kita menambahkan hasil ke vector result
+          result->push_back(hasil);
+
+          // Mengirimkan data awal, hasil konversi, dan rumus ke fungsi handleHistory
+          handleHistory(to_string((*data)[i]) + " CM", to_string(hasil) + " KM", "(data / 100000)", 2);
         }
 
         clearScreen(); // Membersihkan layar terminal
@@ -614,10 +1090,18 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
           // (*data) yaitu untuk mengambil data dari pointer data
-          (*data)[i] = inputData("Masukan panjang ke-" + to_string(i + 1) + " dalam centimeter: ");
+          (*data)[i] = inputData<float>("Masukan panjang ke-" + to_string(i + 1) + " dalam centimeter: ");
+
+          // Convert data ke hasil
+          float hasil = (*data)[i] / 100;
 
           // tidak menggunakan tanda * karena data adalah pointer
-          result->push_back((*data)[i] / 100);
+          // push_back adalah fungsi untuk menambahkan data ke vector
+          // jadi disini kita menambahkan hasil ke vector result
+          result->push_back(hasil);
+
+          // Mengirimkan data awal, hasil konversi, dan rumus ke fungsi handleHistory
+          handleHistory(to_string((*data)[i]) + " CM", to_string(hasil) + " M", "(data / 100)", 2);
         }
 
         clearScreen(); // Membersihkan layar terminal
@@ -632,6 +1116,16 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
         }
 
         pauseScreen(); // Pause program hingga user menekan tombol apapun
+        break;
+      case 7:
+        /**
+         * Menampilkan history konversi
+         * Parameter 1 yaitu untuk menentukan jenis data
+         * 1 = suhu
+         * 2 = panjang
+         * 3 = berat
+         */
+        menampilkanHistory(2);
         break;
       default:
         // Ketika user memilih pilihan yang tidak tersedia
@@ -664,19 +1158,20 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
     cout << "4) Kilogram ke Ons" << endl;
     cout << "5) Ons ke Gram" << endl;
     cout << "6) Ons ke Kilogram" << endl;
-    cout << "7) Kembali" << endl;
+    cout << "7) Lihat History" << endl;
+    cout << "8) Kembali" << endl;
     cout << "--------------------------------" << endl;
 
     // Mengambil inputan user dan menyimpannya ke variable input dengan pointer
-    *input = inputData("Masukkan pilihan: ");
+    *input = inputData<int>("Masukkan pilihan: ");
 
     clearScreen(); // Membersihkan layar terminal
 
     // Ketika user memilih kembali, maka program akan berhenti dan kembali ke menu utama
-    if (*input == 7) break;
+    if (*input == 8) break;
     else if (*input > 0 && *input < 7) {
       // Mengambil inputan user dan menyimpannya ke variable totalData dengan pointer
-      *totalData = inputData("Masukan jumlah data berat yang akan dikonversi2: ");
+      *totalData = inputData<float>("Masukan jumlah data berat yang akan dikonversi2: ");
 
       // resize adalah fungsi untuk mengubah ukuran vector atau panjang array
       (*totalData > 1) ? data->resize(*totalData) : data->resize(1);
@@ -686,17 +1181,25 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
      * Percabangan untuk menentukan pilihan user
      * Ketika user memilih pilihan yang tersedia, maka program akan menjalankan konversi berat
      * Ketika user memilih pilihan yang tidak tersedia, maka program akan menampilkan pesan "Pilihan tidak tersedia"
-     * Range pilihan hanya 1 - 6 karena pilihan 7 adalah untuk kembali ke menu utama (break)
+     * Range pilihan hanya 1 - 7 karena pilihan 8 adalah untuk kembali ke menu utama (break)
      */
     switch (*input) {
       case 1:
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
           // (*data) yaitu untuk mengambil data dari pointer data
-          (*data)[i] = inputData("Masukan berat ke-" + to_string(i + 1) + " dalam gram: ");
+          (*data)[i] = inputData<float>("Masukan berat ke-" + to_string(i + 1) + " dalam gram: ");
+
+          // Convert data ke hasil
+          float hasil = (*data)[i] / 1000;
 
           // tidak menggunakan tanda * karena data adalah pointer
-          result->push_back((*data)[i] / 1000);
+          // push_back adalah fungsi untuk menambahkan data ke vector
+          // jadi disini kita menambahkan hasil ke vector result
+          result->push_back(hasil);
+
+          // Mengirimkan data awal, hasil konversi, dan rumus ke fungsi handleHistory
+          handleHistory(to_string((*data)[i]) + " G", to_string(hasil) + " KG", "(data / 1000)", 3);
         }
 
         clearScreen(); // Membersihkan layar terminal
@@ -716,10 +1219,18 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
           // (*data) yaitu untuk mengambil data dari pointer data
-          (*data)[i] = inputData("Masukan berat ke-" + to_string(i + 1) + " dalam gram: ");
+          (*data)[i] = inputData<float>("Masukan berat ke-" + to_string(i + 1) + " dalam gram: ");
+
+          // Convert data ke hasil
+          float hasil = (*data)[i] / 10;
 
           // tidak menggunakan tanda * karena data adalah pointer
-          result->push_back((*data)[i] / 10);
+          // push_back adalah fungsi untuk menambahkan data ke vector
+          // jadi disini kita menambahkan hasil ke vector result
+          result->push_back(hasil);
+
+          // Mengirimkan data awal, hasil konversi, dan rumus ke fungsi handleHistory
+          handleHistory(to_string((*data)[i]) + " G", to_string(hasil) + " ONS", "(data / 10)", 3);
         }
 
         clearScreen(); // Membersihkan layar terminal
@@ -739,10 +1250,18 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
           // (*data) yaitu untuk mengambil data dari pointer data
-          (*data)[i] = inputData("Masukan berat ke-" + to_string(i + 1) + " dalam kilogram: ");
+          (*data)[i] = inputData<float>("Masukan berat ke-" + to_string(i + 1) + " dalam kilogram: ");
+
+          // Convert data ke hasil
+          float hasil = (*data)[i] * 1000;
 
           // tidak menggunakan tanda * karena data adalah pointer
-          result->push_back((*data)[i] * 1000);
+          // push_back adalah fungsi untuk menambahkan data ke vector
+          // jadi disini kita menambahkan hasil ke vector result
+          result->push_back(hasil);
+
+          // Mengirimkan data awal, hasil konversi, dan rumus ke fungsi handleHistory
+          handleHistory(to_string((*data)[i]) + " KG", to_string(hasil) + " G", "(data * 1000)", 3);
         }
 
         clearScreen(); // Membersihkan layar terminal
@@ -762,10 +1281,18 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
           // (*data) yaitu untuk mengambil data dari pointer data
-          (*data)[i] = inputData("Masukan berat ke-" + to_string(i + 1) + " dalam kilogram: ");
+          (*data)[i] = inputData<float>("Masukan berat ke-" + to_string(i + 1) + " dalam kilogram: ");
+
+          // Convert data ke hasil
+          float hasil = (*data)[i] * 10;
 
           // tidak menggunakan tanda * karena data adalah pointer
-          result->push_back((*data)[i] * 10);
+          // push_back adalah fungsi untuk menambahkan data ke vector
+          // jadi disini kita menambahkan hasil ke vector result
+          result->push_back(hasil);
+
+          // Mengirimkan data awal, hasil konversi, dan rumus ke fungsi handleHistory
+          handleHistory(to_string((*data)[i]) + " KG", to_string(hasil) + " ONS", "(data * 10)", 3);
         }
 
         clearScreen(); // Membersihkan layar terminal
@@ -785,10 +1312,18 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
           // (*data) yaitu untuk mengambil data dari pointer data
-          (*data)[i] = inputData("Masukan berat ke-" + to_string(i + 1) + " dalam ons: ");
+          (*data)[i] = inputData<float>("Masukan berat ke-" + to_string(i + 1) + " dalam ons: ");
+
+          // Convert data ke hasil
+          float hasil = (*data)[i] * 100;
 
           // tidak menggunakan tanda * karena data adalah pointer
-          result->push_back((*data)[i] * 100);
+          // push_back adalah fungsi untuk menambahkan data ke vector
+          // jadi disini kita menambahkan hasil ke vector result
+          result->push_back(hasil);
+
+          // Mengirimkan data awal, hasil konversi, dan rumus ke fungsi handleHistory
+          handleHistory(to_string((*data)[i]) + " ONS", to_string(hasil) + " G", "(data * 100)", 3);
         }
 
         clearScreen(); // Membersihkan layar terminal
@@ -808,10 +1343,18 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
         // Looping sebanyak totalData untuk mengambil inputan user
         for (int i = 0; i < *totalData; i++) {
           // (*data) yaitu untuk mengambil data dari pointer data
-          (*data)[i] = inputData("Masukan berat ke-" + to_string(i + 1) + " dalam ons: ");
+          (*data)[i] = inputData<float>("Masukan berat ke-" + to_string(i + 1) + " dalam ons: ");
+
+          // Convert data ke hasil
+          float hasil = (*data)[i] / 10;
 
           // tidak menggunakan tanda * karena data adalah pointer
-          result->push_back((*data)[i] / 10);
+          // push_back adalah fungsi untuk menambahkan data ke vector
+          // jadi disini kita menambahkan hasil ke vector result
+          result->push_back(hasil);
+
+          // Mengirimkan data awal, hasil konversi, dan rumus ke fungsi handleHistory
+          handleHistory(to_string((*data)[i]) + " ONS", to_string(hasil) + " KG", "(data / 10)", 3);
         }
 
         clearScreen(); // Membersihkan layar terminal
@@ -826,6 +1369,16 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
         }
 
         pauseScreen(); // Pause program hingga user menekan tombol apapun
+        break;
+      case 7:
+        /**
+         * Menampilkan history konversi
+         * Parameter 1 yaitu untuk menentukan jenis data
+         * 1 = suhu
+         * 2 = panjang
+         * 3 = berat
+         */
+        menampilkanHistory(3);
         break;
       default:
         // Ketika user memilih pilihan yang tidak tersedia
