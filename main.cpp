@@ -565,14 +565,25 @@ void menampilkanHistory(int jenisData) {
     vector<string> data;
     bool isFound = false;
 
-    // Menanyakan user apakah akan mencari berdasarkan data awal atau hasil konversi
-    int pilihan = inputData<int>("Cari berdasarkan data awal atau hasil konversi? (1 = data awal, 2 = hasil konversi): ");
+    // Menampilkan menu untuk mencari data
+    cout << "Mencari data" << endl;
+    cout << "--------------------------------" << endl;
+    cout << "1) Data awal" << endl;
+    cout << "2) Hasil konversi" << endl;
+    cout << "3) Kembali" << endl;
+    cout << "--------------------------------" << endl;
 
-    // Ketika user memilih pilihan yang tidak tersedia
-    if (pilihan < 1 || pilihan > 2) {
+    // Menanyakan user akan memilih data awal atau hasil konversi
+    int pilihan = inputData<int>("Masukan pilihan anda: ");
+
+    // Ketika user memilih kembali, maka program akan berhenti dan kembali ke menu utama
+    if (pilihan == 3) menampilkanHistory(jenisData + 1);
+    else if (pilihan < 1 || pilihan > 2) { // Ketika user memilih pilihan yang tidak tersedia
       cout << "Proses menampilkan history gagal, pilihan tidak tersedia" << endl;
       return;
     }
+
+    clearScreen(); // Membersihkan layar terminal
 
     // Menanyakan user data yang akan dicari
     dataSearch = inputData<string>("Masukan data yang akan dicari: ");
