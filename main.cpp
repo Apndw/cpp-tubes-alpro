@@ -720,8 +720,6 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
           // tidak menggunakan tanda * karena data adalah pointer
           // push_back adalah fungsi untuk menambahkan data ke vector
           // jadi disini kita menambahkan hasil ke vector result
-          // push_back adalah fungsi untuk menambahkan data ke vector
-          // jadi disini kita menambahkan hasil ke vector result
           result->push_back(hasil);
 
           // Mengirimkan data awal, hasil konversi, dan rumus ke fungsi handleHistory
@@ -751,8 +749,6 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
           float hasil = (*data)[i] + 273.15;
 
           // tidak menggunakan tanda * karena data adalah pointer
-          // push_back adalah fungsi untuk menambahkan data ke vector
-          // jadi disini kita menambahkan hasil ke vector result
           // push_back adalah fungsi untuk menambahkan data ke vector
           // jadi disini kita menambahkan hasil ke vector result
           result->push_back(hasil);
