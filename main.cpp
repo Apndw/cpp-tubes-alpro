@@ -5,6 +5,7 @@
 
 /**
  * Import beberapa fungsi dari namespace std
+ * 
  * std::cin = untuk mengambil inputan user
  * std::cout = untuk menampilkan output
  * std::endl = untuk membuat baris baru
@@ -20,6 +21,16 @@ using std::string; // Menggunakan std::string
 using std::vector; // Menggunakan std::vector
 using std::to_string; // Menggunakan std::to_string
 using std::setprecision; // Menggunakan std::setprecision
+
+/**
+ * @brief Deklarasi variable global
+ * 
+ * isDevMode = untuk mengetahui apakah program berjalan di mode development atau tidak
+ * 
+ * Jika isDevMode = true, maka program akan menampilkan pesan "Mode development aktif"
+ * dan program akan menampilkan lebih banyak informasi
+ */
+bool isDevMode = false;
 
 /**
  * @brief Deklarasi variable global
@@ -42,6 +53,21 @@ int indexResult = 0;
 int indexHistorySuhu = 0, indexHistoryPanjang = 0, indexHistoryBerat = 0;
 
 /**
+ * @brief Deklarasi struct History
+ * 
+ * data = untuk menyimpan data awal
+ * result = untuk menyimpan hasil konversi
+ * rumus = untuk menyimpan rumus konversi
+ * 
+ * Note : struct adalah tipe data yang dapat menyimpan beberapa tipe data dan dapat digunakan untuk membuat object
+ */
+struct History {
+  string data;
+  string result;
+  string rumus;
+};
+
+/**
  * @brief Deklarasi array 3 dimensi secara global
  * 
  * historyData = untuk menyimpan history data
@@ -49,7 +75,17 @@ int indexHistorySuhu = 0, indexHistoryPanjang = 0, indexHistoryBerat = 0;
  * historyData[3][50] = untuk menyimpan 50 data untuk setiap jenis data
  * historyData[3][50][3] = untuk menyimpan 3 data untuk setiap data (data awal, hasil konversi, rumus)
  */
-string historyData[3][50][3];
+History historyData[3][50][3];
+
+/**
+ * @brief Menampilkan pesan debug
+ * 
+ * @param message pesan yang akan ditampilkan ke user - string
+ * @param value value yang akan ditampilkan ke user - string
+ *
+ * @return void
+ */
+void debug(string message, string value);
 
 /**
  * @brief Membersihkan layar terminal (Windows & Linux)
@@ -154,10 +190,17 @@ int main() {
    */
   vector<float> data, result;
 
-  // Register setprecision untuk handle data yang mencapai nilai jutaan
+  /**
+   * Register setprecision untuk handle data yang mencapai nilai jutaan
+   * Hal ini untuk menghindari data yang diubah menjadi notasi ilmiah
+   * Contoh : 1000000 menjadi 1e+06
+   */
   cout << fixed << setprecision(0);
 
   clearScreen(); // Membersihkan layar terminal
+
+  // Menampilkan pesan "Mode development aktif" jika isDevMode = true
+  debug("main", "Mode development aktif, menjalankan fungsi main");
 
   /**
    * Looping akan berjalan selama variable isOnRepeat = true
@@ -175,9 +218,13 @@ int main() {
     cout << "4) Keluar" << endl;
     cout << "--------------------------------" << endl;
 
-    input = inputData<int>("Masukkan pilihan: "); // Mengambil inputan user dan menyimpannya ke variable input
+    // Mengambil inputan user dan menyimpannya ke variable input
+    input = inputData<int>("Masukkan pilihan: ");
 
     clearScreen(); // Membersihkan layar terminal
+
+    // Menampilkan value inputan user
+    debug("main", "Inputan user: " + to_string(input));
 
     /**
      * Percabangan untuk menentukan pilihan user
@@ -187,26 +234,44 @@ int main() {
      */
     switch (input) {
       case 1:
+        // Menampilkan ke user bahwa program akan menjalankan fungsi konversi suhu
+        debug("main", "Menjalankan fungsi konversi suhu, mengirimkan alamat variable input, totalData, data, result ke fungsi konversiSuhu");
+
         // Mengirimkan alamat variable input, totalData, data, result ke fungsi konversiSuhu
         konversiSuhu(&input, &totalData, &data, &result);
         break;
       case 2:
+        // Menampilkan ke user bahwa program akan menjalankan fungsi konversi panjang
+        debug("main", "Menjalankan fungsi konversi panjang, mengirimkan alamat variable input, totalData, data, result ke fungsi konversiPanjang");
+
         // Mengirimkan alamat variable input, totalData, data, result ke fungsi konversiPanjang
         konversiPanjang(&input, &totalData, &data, &result);
         break;
       case 3:
+        // Menampilkan ke user bahwa program akan menjalankan fungsi konversi berat
+        debug("main", "Menjalankan fungsi konversi berat, mengirimkan alamat variable input, totalData, data, result ke fungsi konversiBerat");
+
         // Mengirimkan alamat variable input, totalData, data, result ke fungsi konversiBerat
         konversiBerat(&input, &totalData, &data, &result);
         break;
       case 4:
-        isOnRepeat = false; // Ketika user memilih keluar, variable isOnRepeat akan diubah menjadi false
+        // Menampilkan ke user bahwa program akan keluar
+        debug("main", "Variable isOnRepeat diubah menjadi false, program akan keluar");
+
+        // Ketika user memilih keluar, variable isOnRepeat akan diubah menjadi false
+        isOnRepeat = false;
         break;
       default:
+        // Ketika user memilih pilihan yang tidak tersedia
         cout << "Pilihan tidak tersedia" << endl;
+        break;
     }
   } while (isOnRepeat); // ketika variable isOnRepeat = false maka program akan berhenti
 
   cout << "Terima kasih telah menggunakan posion (pocket conversion)" << endl;
+
+  // Mengecek apakah program berjalan hingga akhir atau tidak
+  debug("main", "Keluar dari fungsi main");
 
   return 0; // Keluar dari program dengan status 0 (berhasil)
 }
@@ -232,6 +297,9 @@ void clearScreen() {
   #else
     system("clear");
   #endif
+
+  // Memastikan bahwa layar terminal sudah bersih
+  debug("clearScreen", "Berhasil membersihkan layar terminal");
 }
 
 /**
@@ -240,6 +308,9 @@ void clearScreen() {
  * @return void
  */
 void pauseScreen() {
+  // Menjalankan inisialisasi fungsi pauseScreen
+  debug("pauseScreen", "Menjalankan fungsi pauseScreen");
+
   /**
    * #ifdef adalah preprocessor directive yang digunakan untuk mengecek apakah suatu macro sudah didefinisikan atau belum
    * #endif adalah untuk mengakhiri preprocessor directive 
@@ -267,6 +338,9 @@ void pauseScreen() {
   #endif
 
   clearScreen(); // Membersihkan layar terminal
+
+  // Memastikan bahwa program sudah di pause dan melanjutkan program
+  debug("pauseScreen", "Berhasil menjalankan fungsi pauseScreen");
 }
 
 /**
@@ -277,6 +351,9 @@ void pauseScreen() {
  * @return T
  */
 template <typename T> T inputData(string message) {
+  // Menjalankan inisialisasi fungsi inputData
+  debug("inputData", "Menjalankan fungsi inputData");
+
   /**
    * Deklarasi variable input
    * Variable bersifat lokal karena dideklarasikan di dalam fungsi
@@ -291,6 +368,9 @@ template <typename T> T inputData(string message) {
   // Mengambil inputan user dan menyimpannya ke variable input
   // Jika T adalah float atau double, maka inputan user akan diubah menjadi float atau double 
   cin >> input;
+
+  // Memastikan bahwa program sudah mengambil inputan user dan mengembalikan nilai input
+  debug("inputData", "Berhasil menjalankan fungsi inputData");
 
   // Mengembalikan nilai input
   return input;
@@ -332,9 +412,9 @@ void handleHistory(string data, string result, string rumus, int jenisData) {
   // Mengubah value jenisData menjadi index historyData
   jenisData--;
 
-  historyData[jenisData][*indexHistory][0] = data; // Menyimpan data awal ke historyData
-  historyData[jenisData][*indexHistory][1] = result; // Menyimpan hasil konversi ke historyData
-  historyData[jenisData][*indexHistory][2] = rumus; // Menyimpan rumus ke historyData
+  historyData[jenisData][*indexHistory]->data = data; // Menyimpan data awal ke historyData
+  historyData[jenisData][*indexHistory]->result = result; // Menyimpan hasil konversi ke historyData
+  historyData[jenisData][*indexHistory]->rumus = rumus; // Menyimpan rumus ke historyData
 
   // indexHistory++ digunakan untuk menambahkan indexHistory sebanyak 1
   (*indexHistory)++;
@@ -440,9 +520,9 @@ void menampilkanHistory(int jenisData) {
      * Dengan ini kita menampilkan data dari terlama ke terbaru
      */
     for (int i = 0; i < indexHistory; i++) {
-      cout << "Data awal: " << historyData[jenisData][i][0] << endl; // Menampilkan data awal
-      cout << "Hasil konversi: " << historyData[jenisData][i][1] << endl; // Menampilkan hasil konversi
-      cout << "Rumus: " << historyData[jenisData][i][2] << endl; // Menampilkan rumus
+      cout << "Data awal: " << historyData[jenisData][i]->data << endl; // Menampilkan data awal
+      cout << "Hasil konversi: " << historyData[jenisData][i]->result << endl; // Menampilkan hasil konversi
+      cout << "Rumus: " << historyData[jenisData][i]->rumus << endl; // Menampilkan rumus
       cout << "--------------------------------" << endl;
     }
   } else if (historyType == 2) {
@@ -452,9 +532,9 @@ void menampilkanHistory(int jenisData) {
      * Dengan ini kita menampilkan data dari terbaru ke terlama
      */
     for (int i = indexHistory - 1; i >= 0; i--) {
-      cout << "Data awal: " << historyData[jenisData][i][0] << endl; // Menampilkan data awal
-      cout << "Hasil konversi: " << historyData[jenisData][i][1] << endl; // Menampilkan hasil konversi
-      cout << "Rumus: " << historyData[jenisData][i][2] << endl; // Menampilkan rumus
+      cout << "Data awal: " << historyData[jenisData][i]->data << endl; // Menampilkan data awal
+      cout << "Hasil konversi: " << historyData[jenisData][i]->result << endl; // Menampilkan hasil konversi
+      cout << "Rumus: " << historyData[jenisData][i]->rumus << endl; // Menampilkan rumus
       cout << "--------------------------------" << endl;
     }
   } else if (historyType == 3) {
@@ -469,7 +549,7 @@ void menampilkanHistory(int jenisData) {
      * Note : push_back adalah fungsi untuk menambahkan data ke vector
      */
     for (int i = 0; i < indexHistory; i++) {
-      data.push_back(stof(historyData[jenisData][i][1]));
+      data.push_back(stof(historyData[jenisData][i]->result));
     }
 
     /**
@@ -500,10 +580,10 @@ void menampilkanHistory(int jenisData) {
     for (int i = 0; i < indexHistory; i++) {
       for (int j = 0; j < indexHistory; j++) {
         // Jika data[i] sama dengan historyData[jenisData][j][1], maka kita tampilkan data awal, hasil konversi, dan rumus
-        if (data[i] == stof(historyData[jenisData][j][1])) {
-          cout << "Data awal: " << historyData[jenisData][j][0] << endl; // Menampilkan data awal
-          cout << "Hasil konversi: " << historyData[jenisData][j][1] << endl; // Menampilkan hasil konversi
-          cout << "Rumus: " << historyData[jenisData][j][2] << endl; // Menampilkan rumus
+        if (data[i] == stof(historyData[jenisData][j]->result)) {
+          cout << "Data awal: " << historyData[jenisData][j]->data << endl; // Menampilkan data awal
+          cout << "Hasil konversi: " << historyData[jenisData][j]->result << endl; // Menampilkan hasil konversi
+          cout << "Rumus: " << historyData[jenisData][j]->rumus << endl; // Menampilkan rumus
           cout << "--------------------------------" << endl;
         }
       }
@@ -520,7 +600,7 @@ void menampilkanHistory(int jenisData) {
      * Note : push_back adalah fungsi untuk menambahkan data ke vector
      */
     for (int i = 0; i < indexHistory; i++) {
-      data.push_back(stof(historyData[jenisData][i][1]));
+      data.push_back(stof(historyData[jenisData][i]->result));
     }
 
     /**
@@ -551,10 +631,10 @@ void menampilkanHistory(int jenisData) {
     for (int i = 0; i < indexHistory; i++) {
       for (int j = 0; j < indexHistory; j++) {
         // Jika data[i] sama dengan historyData[jenisData][j][1], maka kita tampilkan data awal, hasil konversi, dan rumus
-        if (data[i] == stof(historyData[jenisData][j][1])) {
-          cout << "Data awal: " << historyData[jenisData][j][0] << endl; // Menampilkan data awal
-          cout << "Hasil konversi: " << historyData[jenisData][j][1] << endl; // Menampilkan hasil konversi
-          cout << "Rumus: " << historyData[jenisData][j][2] << endl; // Menampilkan rumus
+        if (data[i] == stof(historyData[jenisData][j]->result)) {
+          cout << "Data awal: " << historyData[jenisData][j]->data << endl; // Menampilkan data awal
+          cout << "Hasil konversi: " << historyData[jenisData][j]->result << endl; // Menampilkan hasil konversi
+          cout << "Rumus: " << historyData[jenisData][j]->rumus << endl; // Menampilkan rumus
           cout << "--------------------------------" << endl;
         }
       }
@@ -594,7 +674,8 @@ void menampilkanHistory(int jenisData) {
       return;
     }
 
-    pilihan--; // Mengubah value pilihan menjadi index historyData
+    // Deklarasi variable temp untuk menyimpan data yang sudah dipisah
+    string tempData;
 
     /**
      * Melakukan looping sebanyak total indexHistory
@@ -604,15 +685,24 @@ void menampilkanHistory(int jenisData) {
      * Note : push_back adalah fungsi untuk menambahkan data ke vector
      */
     for (int i = 0; i < indexHistory; i++) {
-      // Mengambil data awal dari historyData[jenisData][i][pilihan]
-      string tempData = historyData[jenisData][i][pilihan];
+      // Mengambil data berdasarkan pilihan user
+      switch (pilihan) {
+        case 1:
+          tempData = historyData[jenisData][i]->data;
+          break;
+        case 2:
+          tempData = historyData[jenisData][i]->result;
+          break;
+        default:
+          break;
+      }
 
       /**
        * Memisahkan antara hasil konversi dengan satuan konversi
        * Contoh "72.13821 KM" menjadi hanya "72.13821"
        * Agar proses pencarian lebih mudah
        */
-      tempData = tempData.substr(0, historyData[jenisData][i][pilihan].find(" "));
+      tempData = tempData.substr(0, tempData.find(" "));
 
       /**
        * Memasukan hasil pemisahan pada temp data ke variable data
@@ -637,9 +727,9 @@ void menampilkanHistory(int jenisData) {
 
       // Jika data ditemukan, maka kita tampilkan data awal, hasil konversi, dan rumus
       if (pos != string::npos) {
-        cout << "Data awal: " << historyData[jenisData][i][0] << endl; // Menampilkan data awal
-        cout << "Hasil konversi: " << historyData[jenisData][i][1] << endl; // Menampilkan hasil konversi
-        cout << "Rumus: " << historyData[jenisData][i][2] << endl; // Menampilkan rumus
+        cout << "Data awal: " << historyData[jenisData][i]->data << endl; // Menampilkan data awal
+        cout << "Hasil konversi: " << historyData[jenisData][i]->result << endl; // Menampilkan hasil konversi
+        cout << "Rumus: " << historyData[jenisData][i]->rumus << endl; // Menampilkan rumus
         cout << "--------------------------------" << endl;
 
         isFound = true; // Mengubah value isFound menjadi true
@@ -731,7 +821,7 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " C = " << (*result)[indexResult] << " F" << endl;
+          cout << to_string((*data)[i]) << " C = " << to_string((*result)[indexResult]) << " F" << endl;
 
           // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
           indexResult++;
@@ -762,7 +852,7 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " C = " << (*result)[indexResult] << " K" << endl;
+          cout << to_string((*data)[i]) << " C = " << to_string((*result)[indexResult]) << " K" << endl;
 
           // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
           indexResult++;
@@ -793,7 +883,7 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " F = " << (*result)[indexResult] << " C" << endl;
+          cout << to_string((*data)[i]) << " F = " << to_string((*result)[indexResult]) << " C" << endl;
 
           // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
           indexResult++;
@@ -824,7 +914,7 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " F = " << (*result)[indexResult] << " K" << endl;
+          cout << to_string((*data)[i]) << " F = " << to_string((*result)[indexResult]) << " K" << endl;
 
           // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
           indexResult++;
@@ -855,7 +945,7 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " K = " << (*result)[indexResult] << " C" << endl;
+          cout << to_string((*data)[i]) << " K = " << to_string((*result)[indexResult]) << " C" << endl;
 
           // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
           indexResult++;
@@ -886,7 +976,7 @@ void konversiSuhu(int *input, int *totalData, vector<float> *data, vector<float>
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " K = " << (*result)[indexResult] << " F" << endl;
+          cout << to_string((*data)[i]) << " K = " << to_string((*result)[indexResult]) << " F" << endl;
 
           // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
           indexResult++;
@@ -984,7 +1074,7 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++){
-          cout << (*data)[i] << " km = " << (*result)[indexResult] << " m" << endl;
+          cout << to_string((*data)[i]) << " km = " << to_string((*result)[indexResult]) << " m" << endl;
 
           // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
           indexResult++;
@@ -1015,7 +1105,7 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " km = " << (*result)[indexResult] << " cm" << endl;
+          cout << to_string((*data)[i]) << " km = " << to_string((*result)[indexResult]) << " cm" << endl;
 
           // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
           indexResult++;
@@ -1046,7 +1136,7 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " m = " << (*result)[indexResult] << " km" << endl;
+          cout << to_string((*data)[i]) << " m = " << to_string((*result)[indexResult]) << " km" << endl;
 
           // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
           indexResult++;
@@ -1077,7 +1167,7 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " m = " << (*result)[indexResult] << " cm" << endl;
+          cout << to_string((*data)[i]) << " m = " << to_string((*result)[indexResult]) << " cm" << endl;
 
           // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
           indexResult++;
@@ -1108,7 +1198,7 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " cm = " << (*result)[indexResult] << " km" << endl;
+          cout << to_string((*data)[i]) << " cm = " << to_string((*result)[indexResult]) << " km" << endl;
 
           // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
           indexResult++;
@@ -1139,7 +1229,7 @@ void konversiPanjang(int *input, int *totalData, vector<float> *data, vector<flo
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " cm = " << (*result)[indexResult] << " m" << endl;
+          cout << to_string((*data)[i]) << " cm = " << to_string((*result)[indexResult]) << " m" << endl;
 
           // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
           indexResult++;
@@ -1237,7 +1327,7 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " g = " << (*result)[indexResult] << " kg" << endl;
+          cout << to_string((*data)[i]) << " g = " << to_string((*result)[indexResult]) << " kg" << endl;
 
           // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
           indexResult++;
@@ -1268,7 +1358,7 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " g = " << (*result)[indexResult] << " ons" << endl;
+          cout << to_string((*data)[i]) << " g = " << to_string((*result)[indexResult]) << " ons" << endl;
 
           // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
           indexResult++;
@@ -1299,7 +1389,7 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " kg = " << (*result)[indexResult] << " g" << endl;
+          cout << to_string((*data)[i]) << " kg = " << to_string((*result)[indexResult]) << " g" << endl;
 
           // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
           indexResult++;
@@ -1330,7 +1420,7 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " kg = " << (*result)[indexResult] << " ons" << endl;
+          cout << to_string((*data)[i]) << " kg = " << to_string((*result)[indexResult]) << " ons" << endl;
 
           // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
           indexResult++;
@@ -1361,7 +1451,7 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " ons = " << (*result)[indexResult] << " g" << endl;
+          cout << to_string((*data)[i]) << " ons = " << to_string((*result)[indexResult]) << " g" << endl;
 
           // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
           indexResult++;
@@ -1392,7 +1482,7 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
 
         // Looping sebanyak totalData untuk menampilkan hasil konversi
         for (int i = 0; i < *totalData; i++) {
-          cout << (*data)[i] << " ons = " << (*result)[indexResult] << " kg" << endl;
+          cout << to_string((*data)[i]) << " ons = " << to_string((*result)[indexResult]) << " kg" << endl;
 
           // indexResult++ digunakan untuk menambahkan indexResult sebanyak 1
           indexResult++;
@@ -1415,4 +1505,18 @@ void konversiBerat(int *input, int *totalData, vector<float> *data, vector<float
         cout << "Pilihan tidak tersedia" << endl;
     }
   }
+}
+
+/**
+ * @brief Menampilkan pesan debug
+ * 
+ * @param message pesan yang akan ditampilkan ke user - string
+ * @param value value yang akan ditampilkan ke user - string
+ *
+ * @return void
+ */
+void debug(string message, string value) {
+  if (!isDevMode) return;
+
+  cout << "[DEBUG] [" << message << "] : " << value << endl;
 }
